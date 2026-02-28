@@ -1,7 +1,7 @@
 [project]
 name = "study-planner"
 version = "0.1.0"
-description = "ICL DoC Study Planner API - SSE Project"
+description = "SSE Project: ICL DoC Study Planner API"
 authors = [
     { name = "Cindra", email = "cindra.cindra4625@imperial.ac.uk" },
 ]
