@@ -10,5 +10,5 @@ class Task(SQLModel, table=True):
     year: str = Field(index=True) 
     username: str = Field(index=True)
     title: str
-    creation_date: date = Field(default_factory=date.now)
+    creation_date: date = Field(default_factory=date.today())
     task_completed: bool = Field(default=False)
