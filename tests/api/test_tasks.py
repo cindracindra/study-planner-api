@@ -26,7 +26,6 @@ def test_tasks_response_contains_expected_fields(client, task_factory):
 
 
 def test_tasks_response_only_contains_tasks_for_user_and_year(client, task_factory):
-    # Create tasks for different users and years
     task_factory.create(username="hpotter", year="2425")
     task_factory.create(username="hgranger", year="2425")
     task_factory.create(username="hpotter", year="2526")
