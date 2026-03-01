@@ -5,6 +5,7 @@ from typer import Typer, confirm, echo, Argument, Option, Exit
 
 from app.database.connection import engine
 from app.factories import orm_factories
+from app.factories import (ConfidenceRatingFactory, ModuleRatingFactory, TaskFactory)
 
 from app.utils.factories import set_factories_session
 
@@ -58,11 +59,11 @@ def populate_db(
         module_codes = ["60001", "60003", "60004"]
 
         for student in students:
-            cr = orm_factories.ConfidenceRatingFactory(username=student, year=year)
+            cr = ConfidenceRatingFactory(username=student, year=year)
     
             for code in module_codes:
                 for week in range(1, 12):
-                    orm_factories.ModuleRatingFactory(
+                    ModuleRatingFactory(
                         confidence_rating=cr,
                         module_code=code,
                         term_week=week,
@@ -70,11 +71,11 @@ def populate_db(
                     )
 
             for i in range(5):
-                orm_factories.TaskFactory(
+                TaskFactory(
                     username=student,
                     year=year,
                     title=f"Task {i+1} for {student}",
-                    creation_date=date.now(timezone.utc) - timedelta(days=i),
+                    creation_date=date.today() - timedelta(days=i),
                     task_completed=(i % 2 == 0),
                 )
 
