@@ -71,7 +71,7 @@ def app_fixture(session: Session):
     app: FastAPI = create_application()
 
     def get_session_override():
-        return session
+        yield session
 
     def get_settings_override():
         return Settings(testing=True)
