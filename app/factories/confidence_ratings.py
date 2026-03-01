@@ -25,6 +25,6 @@ class ModuleRatingFactory(SQLAlchemyModelFactory):
     module_code = Faker(
         "pystr_format", string_format="#####", letters=string.ascii_uppercase
     )
-    rating = Faker("random_element", elements=[None, -1, 1, 2, 3, 4, 5])
+    rating = Faker("ratings")
     term_week = Faker("pyint", min_value=1, max_value=11)
     confidence_rating = SubFactory(ConfidenceRatingFactory)
