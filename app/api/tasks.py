@@ -9,13 +9,13 @@ from app.models.tasks import Task
 from app.schemas.tasks import TaskRead, TaskWrite, TaskUpdate
 
 
-task_router = APIRouter(
+tasks_router = APIRouter(
     prefix="/{year}/{username}/personal-tasks",
     tags=["personal tasks"],
 )
 
 
-@task_router.get("", response_model=list[TaskRead])
+@tasks_router.get("", response_model=list[TaskRead])
 def get_personal_tasks(
     year: str = Path(..., description="Academic year in short form e.g. 2324"),
     username: str = Path(..., description="Username"),
@@ -29,7 +29,7 @@ def get_personal_tasks(
     return session.exec(query).all()
 
 
-@task_router.post("", response_model=TaskRead, status_code=status.HTTP_201_CREATED)
+@tasks_router.post("", response_model=TaskRead, status_code=status.HTTP_201_CREATED)
 def create_personal_task(
     task: TaskWrite,
     year: str = Path(..., description="Academic year in short form e.g. 2324"),
@@ -48,7 +48,7 @@ def create_personal_task(
     return new_task
 
 
-@task_router.get("/{task_id}", response_model=TaskRead)
+@tasks_router.get("/{task_id}", response_model=TaskRead)
 def get_task(
     task_id: int,
     session: Session = Depends(get_session),
@@ -63,7 +63,7 @@ def get_task(
     return task
 
 
-@task_router.patch(
+@tasks_router.patch(
     "/{task_id}", response_model=TaskRead, status_code=status.HTTP_200_OK
 )
 def update_task_completion(
@@ -84,7 +84,7 @@ def update_task_completion(
     return task
 
 
-@task_router.delete("/{task_id}", status_code=status.HTTP_204_NO_CONTENT)
+@tasks_router.delete("/{task_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_task(
     task_id: int,
     year: str = Path(..., description="Academic year in short form e.g. 2324"),
