@@ -2,6 +2,7 @@ import string
 
 from factory import Faker, SubFactory
 from factory.alchemy import SQLAlchemyModelFactory
+from app.factories.factory import *
 
 from app.models.confidence_ratings import ConfidenceRating, ModuleRating
 
@@ -27,4 +28,3 @@ class ModuleRatingFactory(SQLAlchemyModelFactory):
     )
     rating = Faker("ratings")
     term_week = Faker("pyint", min_value=1, max_value=11)
-    confidence_rating = SubFactory(ConfidenceRatingFactory)
