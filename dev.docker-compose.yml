@@ -1,0 +1,29 @@
+services:
+  db:
+    image: postgres
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=pass
+      - POSTGRES_DB=study_planner
+  api:
+    image: study_planner
+    environment:
+      - DATABASE_URL=postgresql://user:pass@db/study_planner
+    build:
+      context: .
+      dockerfile: dev.Dockerfile
+    ports:
+      - 8000:8000
+    command: fastapi dev --reload --host 0.0.0.0
+    develop:
+      watch:
+        - action: sync
+          path: ./app
+          target: /study_planner/app
+        - action: sync
+          path: ./migrations
+          target: /study_planner/migrations
+        - action: rebuild
+          path: pyproject.toml
+    depends_on:
+      - db
