@@ -5,16 +5,12 @@ from tests.conftest import HPOTTER_CREDENTIALS
 
 def test_confidence_ratings_endpoint_returns_200(client, confidence_rating_factory):
     confidence_rating_factory.create(username="hpotter", year="2526")
-    res = client.get(
-        "/2526/hpotter/personal-confidence-ratings", auth=HPOTTER_CREDENTIALS
-    )
+    res = client.get("me/2526/personal-confidence-ratings", auth=HPOTTER_CREDENTIALS)
     assert res.status_code == HTTP_200_OK
 
 
 def test_get_confidence_ratings_returns_404_when_not_found(client):
-    res = client.get(
-        "/2526/hpotter/personal-confidence-ratings", auth=HPOTTER_CREDENTIALS
-    )
+    res = client.get("me/2526/personal-confidence-ratings", auth=HPOTTER_CREDENTIALS)
     assert res.status_code == HTTP_404_NOT_FOUND
 
 
@@ -22,9 +18,7 @@ def test_confidence_ratings_response_contains_expected_fields(
     client, confidence_rating_factory
 ):
     confidence_rating_factory.create(username="hpotter", year="2526")
-    res = client.get(
-        "/2526/hpotter/personal-confidence-ratings", auth=HPOTTER_CREDENTIALS
-    )
+    res = client.get("me/2526/personal-confidence-ratings", auth=HPOTTER_CREDENTIALS)
     confidence_rating = res.json()
     expected_fields = {
         "id",
@@ -43,9 +37,7 @@ def test_confidence_ratings_response_only_contains_ratings_for_user_and_year(
     confidence_rating_factory.create(username="hpotter", year="2526")
     confidence_rating_factory.create(username="hgranger", year="2526")
 
-    res = client.get(
-        "/2526/hpotter/personal-confidence-ratings", auth=HPOTTER_CREDENTIALS
-    )
+    res = client.get("me/2526/personal-confidence-ratings", auth=HPOTTER_CREDENTIALS)
 
     assert res.status_code == HTTP_200_OK
     confidence_rating = res.json()
@@ -66,9 +58,7 @@ def test_module_rating_contains_expected_fields(
     )
     module_rating_factory.create(confidence_rating=confidence_rating)
 
-    res = client.get(
-        "/2526/hpotter/personal-confidence-ratings", auth=HPOTTER_CREDENTIALS
-    )
+    res = client.get("me/2526/personal-confidence-ratings", auth=HPOTTER_CREDENTIALS)
 
     module_ratings = res.json()["module_ratings"]
     assert len(module_ratings) > 0
@@ -86,7 +76,7 @@ def test_update_module_rating(client, confidence_rating_factory, module_rating_f
     )
 
     res = client.patch(
-        f"/2526/hpotter/personal-confidence-ratings/modules/{module_rating.id}",
+        f"me/2526/personal-confidence-ratings/modules/{module_rating.id}",
         json={"rating": 5},
         auth=HPOTTER_CREDENTIALS,
     )
@@ -101,7 +91,7 @@ def test_update_module_rating(client, confidence_rating_factory, module_rating_f
 
 def test_update_nonexistent_module_rating_returns_404(client):
     res = client.patch(
-        "/2526/hpotter/personal-confidence-ratings/modules/9999",
+        "me/2526/personal-confidence-ratings/modules/9999",
         json={"rating": 5},
         auth=HPOTTER_CREDENTIALS,
     )
@@ -117,7 +107,7 @@ def test_cannot_update_other_users_module_rating(
     module_rating = module_rating_factory.create(confidence_rating=confidence_rating)
 
     res = client.patch(
-        f"/2526/hpotter/personal-confidence-ratings/modules/{module_rating.id}",
+        f"me/2526/personal-confidence-ratings/modules/{module_rating.id}",
         json={"rating": 5},
         auth=HPOTTER_CREDENTIALS,
     )
@@ -136,7 +126,7 @@ def test_update_module_rating_with_invalid_rating_returns_406(
     )
 
     res = client.patch(
-        f"/2526/hpotter/personal-confidence-ratings/modules/{module_rating.id}",
+        f"me/2526/personal-confidence-ratings/modules/{module_rating.id}",
         json={"rating": 6},
         auth=HPOTTER_CREDENTIALS,
     )

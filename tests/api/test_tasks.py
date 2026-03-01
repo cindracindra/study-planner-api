@@ -6,13 +6,13 @@ from tests.conftest import HPOTTER_CREDENTIALS
 
 def test_tasks_endpoint_returns_200(client, task_factory):
     task_factory.create(username="hpotter", year="2526")
-    res = client.get("/2526/hpotter/personal-tasks", auth=HPOTTER_CREDENTIALS)
+    res = client.get("me/2526/personal-tasks", auth=HPOTTER_CREDENTIALS)
     assert res.status_code == HTTP_200_OK
 
 
 def test_tasks_response_contains_expected_fields(client, task_factory):
     task_factory.create(username="hpotter", year="2526")
-    res = client.get("/2526/hpotter/personal-tasks", auth=HPOTTER_CREDENTIALS)
+    res = client.get("me/2526/personal-tasks", auth=HPOTTER_CREDENTIALS)
     task = res.json()[0]
     expected_fields = {
         "id",
@@ -31,7 +31,7 @@ def test_tasks_response_only_contains_tasks_for_user_and_year(client, task_facto
     task_factory.create(username="hpotter", year="2526")
     task_factory.create(username="hgranger", year="2526")
 
-    res = client.get("/2526/hpotter/personal-tasks", auth=HPOTTER_CREDENTIALS)
+    res = client.get("me/2526/personal-tasks", auth=HPOTTER_CREDENTIALS)
 
     assert res.status_code == HTTP_200_OK
     tasks = res.json()
@@ -60,7 +60,7 @@ def test_tasks_response_only_contains_incomplete_or_today_tasks(client, task_fac
         username="hpotter", year="2526", task_completed=True, creation_date=today
     )
 
-    res = client.get("/2526/hpotter/personal-tasks", auth=HPOTTER_CREDENTIALS)
+    res = client.get("me/2526/personal-tasks", auth=HPOTTER_CREDENTIALS)
 
     assert res.status_code == HTTP_200_OK
     tasks = res.json()
@@ -73,7 +73,7 @@ def test_create_task_endpoint(client):
         "creation_date": "2026-02-28",
     }
     res = client.post(
-        "/2526/hpotter/personal-tasks",
+        "me/2526/personal-tasks",
         json=new_task,
         auth=HPOTTER_CREDENTIALS,
     )
@@ -91,7 +91,7 @@ def test_create_task_endpoint(client):
 
 def test_create_task_with_missing_title_returns_422(client):
     res = client.post(
-        "/2526/hpotter/personal-tasks",
+        "me/2526/personal-tasks",
         json={"creation_date": "2026-02-28"},
         auth=HPOTTER_CREDENTIALS,
     )
@@ -100,7 +100,7 @@ def test_create_task_with_missing_title_returns_422(client):
 
 def test_create_task_with_invalid_date_format_returns_422(client):
     res = client.post(
-        "/2526/hpotter/personal-tasks",
+        "me/2526/personal-tasks",
         json={"title": "Test", "creation_date": "28/02/2026"},
         auth=HPOTTER_CREDENTIALS,
     )
@@ -112,7 +112,7 @@ def test_update_task_completion(client, task_factory):
         username="hpotter", year="2526", task_completed=False, creation_date="2026-02-28"
     )
     res = client.patch(
-        f"/2526/hpotter/personal-tasks/{task.id}",
+        f"me/2526/personal-tasks/{task.id}",
         json={"task_completed": True},
         auth=HPOTTER_CREDENTIALS,
     )
@@ -125,20 +125,20 @@ def test_get_task_by_id(client, task_factory):
     task = task_factory.create(
         username="hpotter", year="2526", task_completed=False, creation_date="2026-02-28"
     )
-    res = client.get(f"/2526/hpotter/personal-tasks/{task.id}", auth=HPOTTER_CREDENTIALS)
+    res = client.get(f"me/2526/personal-tasks/{task.id}", auth=HPOTTER_CREDENTIALS)
     assert res.status_code == 200
     retrieved_task = res.json()
     assert retrieved_task["id"] == task.id
 
 
 def test_get_nonexistent_task_returns_404(client):
-    res = client.get("/2526/hpotter/personal-tasks/9999", auth=HPOTTER_CREDENTIALS)
+    res = client.get("me/2526/personal-tasks/9999", auth=HPOTTER_CREDENTIALS)
     assert res.status_code == 404
 
 
 def test_update_nonexistent_task_returns_404(client):
     res = client.patch(
-        "/2526/hpotter/personal-tasks/9999",
+        "me/2526/personal-tasks/9999",
         json={"task_completed": True},
         auth=HPOTTER_CREDENTIALS,
     )
@@ -149,9 +149,8 @@ def test_delete_task_endpoint(client, task_factory):
     task = task_factory.create(
         username="hpotter", year="2526", task_completed=False, creation_date="2026-02-28"
     )
-    res = client.delete(f"/2526/hpotter/personal-tasks/{task.id}", auth=HPOTTER_CREDENTIALS)
+    res = client.delete(f"me/2526/personal-tasks/{task.id}", auth=HPOTTER_CREDENTIALS)
     assert res.status_code == 204
     # Verify the task is deleted
-    get_res = client.get(f"/2526/hpotter/personal-tasks/{task.id}", auth=HPOTTER_CREDENTIALS)
+    get_res = client.get(f"/me/2526/personal-tasks/{task.id}", auth=HPOTTER_CREDENTIALS)
     assert get_res.status_code == 404
-

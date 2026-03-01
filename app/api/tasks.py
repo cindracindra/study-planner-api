@@ -4,13 +4,13 @@ from sqlmodel import Session, select
 from starlette import status
 from datetime import date
 
-from app.dependencies.main import get_session
+from app.dependencies.main import get_current_user, get_session
 from app.models.tasks import Task
 from app.schemas.tasks import TaskRead, TaskWrite, TaskUpdate
 
 
 tasks_router = APIRouter(
-    prefix="/{year}/{username}/personal-tasks",
+    prefix="/me/{year}/personal-tasks",
     tags=["personal tasks"],
 )
 
@@ -18,7 +18,7 @@ tasks_router = APIRouter(
 @tasks_router.get("", response_model=list[TaskRead])
 def get_personal_tasks(
     year: str = Path(..., description="Academic year in short form e.g. 2324"),
-    username: str = Path(..., description="Username"),
+    username: str = Depends(get_current_user),
     session: Session = Depends(get_session),
 ):
     query = select(Task).where(
@@ -33,7 +33,7 @@ def get_personal_tasks(
 def create_personal_task(
     task: TaskWrite,
     year: str = Path(..., description="Academic year in short form e.g. 2324"),
-    username: str = Path(..., description="Username"),
+    username: str = Depends(get_current_user),
     session: Session = Depends(get_session),
 ):
     new_task = Task(
@@ -88,7 +88,7 @@ def update_task_completion(
 def delete_task(
     task_id: int,
     year: str = Path(..., description="Academic year in short form e.g. 2324"),
-    username: str = Path(..., description="Username"),
+    username: str = Depends(get_current_user),
     session: Session = Depends(get_session),
 ):
     query = select(Task).where(

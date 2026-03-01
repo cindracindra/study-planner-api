@@ -3,7 +3,7 @@ from sqlalchemy import or_
 from sqlmodel import Session, select
 from starlette import status
 
-from app.dependencies.main import get_session
+from app.dependencies.main import get_current_user, get_session
 from app.models.confidence_ratings import ConfidenceRating, ModuleRating
 from app.schemas.confidence_ratings import (
     ConfidenceRatingRead,
@@ -13,7 +13,7 @@ from app.schemas.confidence_ratings import (
 
 
 confidence_ratings_router = APIRouter(
-    prefix="/{year}/{username}/personal-confidence-ratings",
+    prefix="/me/{year}/personal-confidence-ratings",
     tags=["personal confidence ratings"],
 )
 
@@ -24,7 +24,7 @@ def get_personal_confidence_ratings(
         None, alias="module_code"
     ),  # ← List from query params
     year: str = Path(..., description="Academic year in short form e.g. 2324"),
-    username: str = Path(..., description="Username"),
+    username: str = Depends(get_current_user),
     session: Session = Depends(get_session),
 ):
     query = select(ConfidenceRating).where(
@@ -54,7 +54,7 @@ def update_module_rating(
     rating_update: ModuleRatingUpdate,
     module_rating_id: int = Path(..., description="ID of the module rating to update"),
     year: str = Path(..., description="Academic year in short form e.g. 2324"),
-    username: str = Path(..., description="Username"),
+    username: str = Depends(get_current_user),
     session: Session = Depends(get_session),
 ):
     query = select(ModuleRating).where(ModuleRating.id == module_rating_id)
