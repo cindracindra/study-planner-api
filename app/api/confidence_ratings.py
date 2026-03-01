@@ -12,13 +12,13 @@ from app.schemas.confidence_ratings import (
 )
 
 
-task_router = APIRouter(
+confidence_ratings_router = APIRouter(
     prefix="/{year}/{username}/personal-confidence-ratings",
     tags=["personal confidence ratings"],
 )
 
 
-@task_router.get("", response_model=ConfidenceRatingRead)
+@confidence_ratings_router.get("", response_model=ConfidenceRatingRead)
 def get_personal_confidence_ratings(
     module_codes: list[str] | None = Query(
         None, alias="module_code"
@@ -45,7 +45,7 @@ def get_personal_confidence_ratings(
     return result
 
 
-@task_router.patch(
+@confidence_ratings_router.patch(
     "/modules/{module_rating_id}",
     response_model=ModuleRatingRead,
     status_code=status.HTTP_200_OK,
