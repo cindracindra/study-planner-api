@@ -53,6 +53,8 @@ def get_personal_confidence_ratings(
 def update_module_rating(
     rating_update: ModuleRatingUpdate,
     module_rating_id: int = Path(..., description="ID of the module rating to update"),
+    year: str = Path(..., description="Academic year in short form e.g. 2324"),
+    username: str = Path(..., description="Username"),
     session: Session = Depends(get_session),
 ):
     query = select(ModuleRating).where(ModuleRating.id == module_rating_id)
@@ -61,6 +63,22 @@ def update_module_rating(
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Module rating not found.",
+        )
+
+    if (
+        module_rating.confidence_rating.username != username
+        or module_rating.confidence_rating.year != year
+    ):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED, detail="Not authorized"
+        )
+
+    if (rating_update.rating != -1) and (
+        rating_update.rating < 1 or rating_update.rating > 5
+    ):
+        raise HTTPException(
+            status_code=status.HTTP_406_NOT_ACCEPTABLE,
+            detail="Rating must be between 1 and 5.",
         )
 
     module_rating.rating = rating_update.rating

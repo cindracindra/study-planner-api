@@ -23,7 +23,6 @@ class ConfidenceRating(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     username: str = Field(index=True)
     year: str = Field(index=True)
-    rating: Optional[int] = None
 
     # One-to-many relationship
     module_ratings: list["ModuleRating"] = Relationship(
