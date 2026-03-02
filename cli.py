@@ -56,7 +56,7 @@ def populate_db(
         set_factories_session(orm_factories, session)
 
         students = ["hpotter", "hgranger", "llovegood", "rweasley", "nlongbott"]
-        module_codes = ["60001", "60003", "60004"]
+        module_codes = ["60002", "60003", "60004"]
 
         for student in students:
             cr = ConfidenceRatingFactory(username=student, year=year)
@@ -70,13 +70,13 @@ def populate_db(
                         rating=None,
                     )
 
-            for i in range(5):
+            for i in range(3):
                 TaskFactory(
                     username=student,
                     year=year,
                     title=f"Task {i+1} for {student}",
                     creation_date=date.today() - timedelta(days=i),
-                    task_completed=(i % 2 == 0),
+                    task_completed=False,
                 )
 
         echo("✓ Successfully seeded the database with Harry Potter-themed test data")
