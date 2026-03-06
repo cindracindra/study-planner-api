@@ -1,11 +1,12 @@
-from app.factories.abc import PersonFactory, RestrictedStudentPersonalDetailsFactory
+from app.factories.abc import PersonFactory, ModuleLevelReadOptimisedFactory, AppSchemasCustomPeopleDetailsStudentDetailsFactory
 from app.factories.confidence_ratings import ConfidenceRatingFactory, ModuleRatingFactory
 from app.factories.tasks import TaskFactory
 
 
 abc_factories = [
     PersonFactory,
-    RestrictedStudentPersonalDetailsFactory,
+    ModuleLevelReadOptimisedFactory,
+    AppSchemasCustomPeopleDetailsStudentDetailsFactory,
 ]
 
 

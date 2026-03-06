@@ -10,6 +10,7 @@ from app.schemas.confidence_ratings import (
     ModuleRatingRead,
     ModuleRatingUpdate,
 )
+from app.utils.sync_helpers import get_sync_status, needs_sync, update_sync_status, create_missing_ratings
 
 
 confidence_ratings_router = APIRouter(
@@ -22,11 +23,16 @@ confidence_ratings_router = APIRouter(
 def get_personal_confidence_ratings(
     module_codes: list[str] | None = Query(
         None, alias="module_code"
-    ),  # ← List from query params
+    ),
     year: str = Path(..., description="Academic year in short form e.g. 2324"),
     username: str = Depends(get_current_user),
     session: Session = Depends(get_session),
 ):
+    sync_status = get_sync_status(session, year, username)
+    if needs_sync(sync_status):
+        create_missing_ratings(session, year, username, total_weeks=11)
+        update_sync_status(session, year, username)
+
     query = select(ConfidenceRating).where(
         ConfidenceRating.year == year,
         ConfidenceRating.username == username,

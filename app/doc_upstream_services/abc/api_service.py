@@ -1,20 +1,24 @@
 from app.doc_upstream_services.abc.deserialisation import deserialize_or_502
 from app.doc_upstream_services.abc.schemas import (
-    RestrictedStudentPersonalDetails,
+    AppSchemasCustomPeopleDetailsStudentDetails,
 )
 from app.doc_upstream_services.base_service import DocUpstreamService
 from app.protocols import AbcUpstreamService
 
 
 class AbcAPIService(DocUpstreamService, AbcUpstreamService):
-    def get_student(
+    def student_info(
         self,
+        usernames: list[str] | None,
         year: str,
-        login: str,
+        cohorts: list[str] | None = None,
         proxied_user: str | None = None,
-    ) -> RestrictedStudentPersonalDetails:
-        res = self.make_request(
-            f"/{year}/students/{login}",
+    ) -> list[AppSchemasCustomPeopleDetailsStudentDetails]:
+        params = {"login": usernames}
+        if cohorts:
+            params.update(cohort=cohorts)
+        return self.make_request(
+            f"/{year}/students",
+            params=params,
             proxied_user=proxied_user,
         )
-        return deserialize_or_502(res, RestrictedStudentPersonalDetails)

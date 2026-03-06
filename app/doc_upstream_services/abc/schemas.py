@@ -7,139 +7,10 @@ from enum import StrEnum
 from pydantic import BaseModel, Field
 
 
-class Name(StrEnum):
-    autumn_term = "autumn term"
-    winter_break = "winter break"
-    spring_term = "spring term"
-    spring_break = "spring break"
-    summer_term = "summer term"
-    summer_break = "summer break"
-
-
-class AcademicPeriodRead(BaseModel):
-    name: Name = Field(..., title="Name")
-    weeks: int = Field(..., title="Weeks")
-    start: date = Field(..., title="Start")
-    end: date = Field(..., title="End")
-
-
-class AnswerbookDetailsRead(BaseModel):
-    period: str = Field(..., title="Period")
-    term: int = Field(..., title="Term")
-    exam_date: date = Field(..., title="Exam Date")
-    start_time: str = Field(..., title="Start Time")
-    duration: int = Field(..., title="Duration")
-    title: str = Field(..., title="Title")
-    module_code: str = Field(..., title="Module Code")
-    exam_code: str = Field(..., title="Exam Code")
-    computer_based_exam: bool = Field(..., title="Computer Based Exam")
-    answerbook_exam_url: str | None = Field(..., title="Answerbook Exam Url")
-
-
-class CohortDegree(BaseModel):
-    degree_year: int = Field(..., title="Degree Year")
-    degree: str = Field(..., title="Degree")
-    degree_short: str = Field(..., title="Degree Short")
-
-
-class CohortRegulations(BaseModel):
-    cohort: str = Field(..., title="Cohort")
-    pass_mark: int = Field(..., title="Pass Mark")
-
-
-class DegreeRead(BaseModel):
-    cohort: str = Field(..., title="Cohort")
-    degree_code: str = Field(..., title="Degree Code")
-    degree_name: str = Field(..., title="Degree Name")
-
-
-class EnrolledStudentRead(BaseModel):
+class Person(BaseModel):
     login: str = Field(..., title="Login")
-    email: str = Field(..., title="Email")
-    lastname: str = Field(..., title="Lastname")
-    firstname: str = Field(..., title="Firstname")
-    level: int = Field(..., title="Level")
-    status: str = Field(..., title="Status")
-    cohort: str = Field(..., title="Cohort")
-
-
-class ExamCandidate(BaseModel):
-    cid: str = Field(..., title="Cid")
-    exam_class: str = Field(..., title="Exam Class")
-    login: str = Field(..., title="Login")
-    first_name: str = Field(..., title="First Name")
-    last_name: str = Field(..., title="Last Name")
-
-
-class ExamRegistrations(BaseModel):
-    exam_code: str = Field(..., title="Exam Code")
-    students: list[ExamCandidate] = Field(..., title="Students")
-
-
-class GUTARead(BaseModel):
-    login: str = Field(..., title="Login")
-    email: str = Field(..., title="Email")
-    lastname: str = Field(..., title="Lastname")
-    firstname: str = Field(..., title="Firstname")
-    role: str = Field(..., title="Role")
-
-
-class ModuleConsolidationMetadata(BaseModel):
-    academic_year: str = Field(..., title="Academic Year")
-    exam_class: str = Field(..., title="Exam Class")
-    exam_code: str = Field(..., title="Exam Code")
-    pass_mark: int | None = Field(..., title="Pass Mark")
-    exam_contribution: int | None = Field(..., title="Exam Contribution")
-    coursework_contribution: int | None = Field(..., title="Coursework Contribution")
-    exam_questions_total: int | None = Field(..., title="Exam Questions Total")
-    exam_questions_needed: int | None = Field(..., title="Exam Questions Needed")
-
-
-class ModuleEnrolmentDetails(BaseModel):
-    module_code: str = Field(..., title="Module Code")
-    students: list[str] = Field(..., title="Students")
-
-
-class ModuleExamCode(BaseModel):
-    department_code: str = Field(..., title="Department Code")
-    registry_code: str = Field(..., title="Registry Code")
-    title: str = Field(..., title="Title")
-
-
-class ModuleLevelReadOptimised(BaseModel):
-    code: str = Field(..., title="Code")
-    title: str = Field(..., title="Title")
-    ects: float = Field(..., title="Ects")
-    terms: list[int] = Field(..., title="Terms")
-    applicable_cohorts: list[str] = Field(..., title="Applicable Cohorts")
-    exam_contribution: int | None = Field(..., title="Exam Contribution")
-    coursework_contribution: int | None = Field(..., title="Coursework Contribution")
-    exam_questions_total: int | None = Field(..., title="Exam Questions Total")
-    exam_questions_needed: int | None = Field(..., title="Exam Questions Needed")
-    level: int | None = Field(..., title="Level")
-
-
-class ModuleOverview(BaseModel):
-    registry_code: str = Field(..., title="Registry Code")
-    title: str = Field(..., title="Title")
-
-
-class ModuleReadBase(BaseModel):
-    code: str = Field(..., title="Code")
-    title: str = Field(..., title="Title")
-    ects: float = Field(..., title="Ects")
-
-
-class ModuleReadOptimised(BaseModel):
-    code: str = Field(..., title="Code")
-    title: str = Field(..., title="Title")
-    ects: float = Field(..., title="Ects")
-    terms: list[int] = Field(..., title="Terms")
-    applicable_cohorts: list[str] = Field(..., title="Applicable Cohorts")
-    exam_contribution: int | None = Field(..., title="Exam Contribution")
-    coursework_contribution: int | None = Field(..., title="Coursework Contribution")
-    exam_questions_total: int | None = Field(..., title="Exam Questions Total")
-    exam_questions_needed: int | None = Field(..., title="Exam Questions Needed")
+    lastname: str | None = Field(..., title="Lastname")
+    firstname: str | None = Field(..., title="Firstname")
 
 
 class ModuleRoleReadOptimised(BaseModel):
@@ -155,219 +26,23 @@ class ModuleRoleReadOptimised(BaseModel):
     roles: list[str] = Field(..., title="Roles")
 
 
-class ModuleWorkload(BaseModel):
+class ModuleLevelReadOptimised(BaseModel):
     code: str = Field(..., title="Code")
     title: str = Field(..., title="Title")
-    lecture_hours: int | None = Field(..., title="Lecture Hours")
-    tutorial_hours: int | None = Field(..., title="Tutorial Hours")
-    population_estimate: int | None = Field(..., title="Population Estimate")
-    has_exam: bool = Field(..., title="Has Exam")
-    unit_load: int = Field(..., title="Unit Load")
-    quantity: float = Field(..., title="Quantity")
-    activity_load: float = Field(..., title="Activity Load")
-
-
-class Person(BaseModel):
-    login: str = Field(..., title="Login")
-    lastname: str | None = Field(..., title="Lastname")
-    firstname: str | None = Field(..., title="Firstname")
-
-
-class PersonIdentityRead(BaseModel):
-    login: str = Field(..., title="Login")
-    email: str = Field(..., title="Email")
-    is_staff: bool = Field(..., title="Is Staff")
-    category: str | None = Field(..., title="Category")
-
-
-class PersonalTutee(BaseModel):
-    login: str = Field(..., title="Login")
-    lastname: str | None = Field(..., title="Lastname")
-    firstname: str | None = Field(..., title="Firstname")
-    cohort: str = Field(..., title="Cohort")
-
-
-class PersonalTutoringAllocation(BaseModel):
-    tutor: Person
-    tutee: PersonalTutee
-
-
-class RegulationGroup(BaseModel):
-    label: str = Field(..., title="Label")
-    maximum_selection: float = Field(..., title="Maximum Selection")
-    minimum_selection: float = Field(..., title="Minimum Selection")
-    modules: list[ModuleReadOptimised] = Field(..., title="Modules")
+    ects: float = Field(..., title="Ects")
+    terms: list[int] = Field(..., title="Terms")
+    applicable_cohorts: list[str] = Field(..., title="Applicable Cohorts")
+    exam_contribution: int | None = Field(..., title="Exam Contribution")
+    coursework_contribution: int | None = Field(..., title="Coursework Contribution")
+    exam_questions_total: int | None = Field(..., title="Exam Questions Total")
+    exam_questions_needed: int | None = Field(..., title="Exam Questions Needed")
+    level: int | None = Field(..., title="Level")
 
 
 class RoleInDepartment(StrEnum):
     student = "student"
     staff = "staff"
     phd = "phd"
-
-
-class RestrictedStudentPersonalDetails(BaseModel):
-    login: str = Field(..., title="Login")
-    email: str = Field(..., title="Email")
-    lastname: str = Field(..., title="Lastname")
-    firstname: str = Field(..., title="Firstname")
-    salutation: str | None = Field(..., title="Salutation")
-    year: str = Field(..., title="Year")
-    role_in_department: RoleInDepartment = Field(..., title="Role In Department")
-    cohort: str = Field(..., title="Cohort")
-    cid: str = Field(..., title="Cid")
-    exam_class: str = Field(..., title="Exam Class")
-    degree_code: str = Field(..., title="Degree Code")
-    degree_year: str = Field(..., title="Degree Year")
-    student_status: str = Field(..., title="Student Status")
-    entry_year: int | None = Field(..., title="Entry Year")
-    fee_status: str | None = Field(..., title="Fee Status")
-    personal_tutor: Person | None
-
-
-class SgtTutor(BaseModel):
-    login: str = Field(..., title="Login")
-
-
-class SimpleModuleRead(BaseModel):
-    title: str = Field(..., title="Title")
-    code: str = Field(..., title="Code")
-    syllabus_label: str = Field(..., title="Syllabus Label")
-
-
-class SimpleStaffPersonalDetails(BaseModel):
-    login: str = Field(..., title="Login")
-    email: str = Field(..., title="Email")
-    lastname: str = Field(..., title="Lastname")
-    firstname: str = Field(..., title="Firstname")
-    salutation: str | None = Field(..., title="Salutation")
-    role_in_department: RoleInDepartment = Field(..., title="Role In Department")
-
-
-class StaffDetails(BaseModel):
-    login: str = Field(..., title="Login")
-    email: str = Field(..., title="Email")
-    lastname: str = Field(..., title="Lastname")
-    firstname: str = Field(..., title="Firstname")
-    salutation: str | None = Field(..., title="Salutation")
-    year: str = Field(..., title="Year")
-    role_in_department: RoleInDepartment = Field(..., title="Role In Department")
-    category: str = Field(..., title="Category")
-    fte: float = Field(..., title="Fte")
-    roles_in_department: list[str] = Field(..., title="Roles In Department")
-    has_extension_clearance: bool = Field(..., title="Has Extension Clearance")
-    has_phd_students: bool = Field(..., title="Has Phd Students")
-    modules: list[ModuleRoleReadOptimised] | None = Field(
-        default_factory=list, title="Modules"
-    )
-
-
-class StaffModuleWorkload(BaseModel):
-    login: str = Field(..., title="Login")
-    modules: list[ModuleWorkload] = Field(..., title="Modules")
-
-
-class StaffRead(BaseModel):
-    login: str = Field(..., title="Login")
-    email: str = Field(..., title="Email")
-    role_in_department: RoleInDepartment = Field(..., title="Role In Department")
-    lastname: str = Field(..., title="Lastname")
-    firstname: str = Field(..., title="Firstname")
-    department: str = Field(..., title="Department")
-    cid: str | None = Field(..., title="Cid")
-
-
-class Status(BaseModel):
-    status: str = Field(..., title="Status")
-    version: str = Field(..., title="Version")
-    environment: str = Field(..., title="Environment")
-    testing: bool = Field(..., title="Testing")
-
-
-class Supervisor(BaseModel):
-    login: str = Field(..., title="Login")
-    firstname: str = Field(..., title="Firstname")
-    lastname: str = Field(..., title="Lastname")
-    email_address: str = Field(..., title="Email Address")
-    role: str = Field(..., title="Role")
-
-
-class TotalEnrolmentDetails(BaseModel):
-    total: int = Field(..., title="Total")
-
-
-class TutorialGroup(BaseModel):
-    number: int = Field(..., title="Number")
-    type: str = Field(..., title="Type")
-    tutor: SgtTutor
-    uta: Person | None
-    members: list[Person] = Field(..., title="Members")
-
-
-class ValidationError(BaseModel):
-    loc: list[str | int] = Field(..., title="Location")
-    msg: str = Field(..., title="Message")
-    type: str = Field(..., title="Error Type")
-
-
-class WorkloadCategory(StrEnum):
-    TEACHING = "TEACHING"
-    RESEARCH = "RESEARCH"
-    DEPARTMENTAL = "DEPARTMENTAL"
-    COLLEGE = "COLLEGE"
-    OTHER = "OTHER"
-    PROFESSIONAL = "PROFESSIONAL"
-
-
-class WorkloadType(StrEnum):
-    PERSONAL_TUTORING = "PERSONAL_TUTORING"
-    INDUSTRIAL_PLACEMENT = "INDUSTRIAL_PLACEMENT"
-    FINAL_YEAR_PROJECT_SUPERVISION_UG = "FINAL_YEAR_PROJECT_SUPERVISION_UG"
-    FINAL_YEAR_PROJECT_SUPERVISION_MSC = "FINAL_YEAR_PROJECT_SUPERVISION_MSC"
-    ISO_SUPERVISION = "ISO_SUPERVISION"
-    GROUP_PROJECT_SUPERVISION_MSC = "GROUP_PROJECT_SUPERVISION_MSC"
-    GROUP_PROJECT_SUPERVISION_UG = "GROUP_PROJECT_SUPERVISION_UG"
-    SGT_SUPERVISION = "SGT_SUPERVISION"
-    PHD_SUPERVISION = "PHD_SUPERVISION"
-    ADMIN_ROLE = "ADMIN_ROLE"
-    PROJECT_SUPERVISION = "PROJECT_SUPERVISION"
-    NON_COMMITTEE_MEMBER_PARTICIPATION_IN_RECRUITMENT_PROCESS = (
-        "NON_COMMITTEE_MEMBER_PARTICIPATION_IN_RECRUITMENT_PROCESS"
-    )
-    DOC_MEETINGS = "DOC_MEETINGS"
-    DOC_COMMUNITY_EVENTS = "DOC_COMMUNITY_EVENTS"
-    MANAGING_OWN_WORKLOAD = "MANAGING_OWN_WORKLOAD"
-    HEALTH_AND_SAFETY = "HEALTH_AND_SAFETY"
-    AWARENESS_OF_POLICIES_AND_PROCEDURES_NOT_COUNTED_ELSEWHERE = (
-        "AWARENESS_OF_POLICIES_AND_PROCEDURES_NOT_COUNTED_ELSEWHERE"
-    )
-    READING_COLLEGE_FACULTY_COMMUNICATIONS_AND_SURVEYS = (
-        "READING_COLLEGE_FACULTY_COMMUNICATIONS_AND_SURVEYS"
-    )
-    COLLEGE_MANDATED_TRAINING = "COLLEGE_MANDATED_TRAINING"
-    ATTENDANCE_AT_FACULTY_COLLEGE_EVENTS_WORKSHOPS = (
-        "ATTENDANCE_AT_FACULTY_COLLEGE_EVENTS_WORKSHOPS"
-    )
-    PERSONAL_DEVELOPMENT = "PERSONAL_DEVELOPMENT"
-    PROFESSIONAL_DEVELOPMENT = "PROFESSIONAL_DEVELOPMENT"
-    SPARE_CAPACITY = "SPARE_CAPACITY"
-    OTHER = "OTHER"
-    PHD_CO_SUPERVISION = "PHD_CO_SUPERVISION"
-    PHD_SECOND_MARKER = "PHD_SECOND_MARKER"
-    PHD_EXAMINER_INTERNAL = "PHD_EXAMINER_INTERNAL"
-
-
-class YearSummary(BaseModel):
-    academic_year: str = Field(..., title="Academic Year")
-    exam_class: str = Field(..., title="Exam Class")
-    status: str = Field(..., title="Status")
-    modules: list[ModuleExamCode] = Field(..., title="Modules")
-
-
-class AppSchemasCustomCohortsStudentDetails(BaseModel):
-    cid: str = Field(..., title="Cid")
-    login: str = Field(..., title="Login")
-    first_name: str = Field(..., title="First Name")
-    last_name: str = Field(..., title="Last Name")
 
 
 class AppSchemasCustomPeopleDetailsStudentDetails(BaseModel):
@@ -391,71 +66,397 @@ class AppSchemasCustomPeopleDetailsStudentDetails(BaseModel):
     personal_tutor: Person | None
 
 
-class CohortInformation(BaseModel):
-    modules: list[ModuleOverview] = Field(..., title="Modules")
-    students: list[AppSchemasCustomCohortsStudentDetails] = Field(..., title="Students")
+
+# class Name(StrEnum):
+#     autumn_term = "autumn term"
+#     winter_break = "winter break"
+#     spring_term = "spring term"
+#     spring_break = "spring break"
+#     summer_term = "summer term"
+#     summer_break = "summer break"
 
 
-class DegreeRegulations(BaseModel):
-    degree_code: str = Field(..., title="Degree Code")
-    cohort: str = Field(..., title="Cohort")
-    credit_criteria: str = Field(..., title="Credit Criteria")
-    degree_title: str = Field(..., title="Degree Title")
-    degree_year: int = Field(..., title="Degree Year")
-    regulations: list[RegulationGroup] = Field(..., title="Regulations")
+# class AcademicPeriodRead(BaseModel):
+#     name: Name = Field(..., title="Name")
+#     weeks: int = Field(..., title="Weeks")
+#     start: date = Field(..., title="Start")
+#     end: date = Field(..., title="End")
 
 
-class HTTPValidationError(BaseModel):
-    detail: list[ValidationError] | None = Field(None, title="Detail")
+# class AnswerbookDetailsRead(BaseModel):
+#     period: str = Field(..., title="Period")
+#     term: int = Field(..., title="Term")
+#     exam_date: date = Field(..., title="Exam Date")
+#     start_time: str = Field(..., title="Start Time")
+#     duration: int = Field(..., title="Duration")
+#     title: str = Field(..., title="Title")
+#     module_code: str = Field(..., title="Module Code")
+#     exam_code: str = Field(..., title="Exam Code")
+#     computer_based_exam: bool = Field(..., title="Computer Based Exam")
+#     answerbook_exam_url: str | None = Field(..., title="Answerbook Exam Url")
 
 
-class ModuleRead(BaseModel):
-    code: str = Field(..., title="Code")
-    title: str = Field(..., title="Title")
-    ects: float = Field(..., title="Ects")
-    terms: list[int] = Field(..., title="Terms")
-    applicable_cohorts: list[str] = Field(..., title="Applicable Cohorts")
-    cohort_regulations: list[CohortRegulations] = Field(..., title="Cohort Regulations")
-    exam_contribution: int | None = Field(..., title="Exam Contribution")
-    coursework_contribution: int | None = Field(..., title="Coursework Contribution")
-    exam_questions_total: int | None = Field(..., title="Exam Questions Total")
-    exam_questions_needed: int | None = Field(..., title="Exam Questions Needed")
-    staff: list[StaffRead] | None = Field(default_factory=list, title="Staff")
-    helpers: list[GUTARead] | None = Field(default_factory=list, title="Helpers")
+# class CohortDegree(BaseModel):
+#     degree_year: int = Field(..., title="Degree Year")
+#     degree: str = Field(..., title="Degree")
+#     degree_short: str = Field(..., title="Degree Short")
 
 
-class PhdStudent(BaseModel):
-    login: str = Field(..., title="Login")
-    firstname: str = Field(..., title="Firstname")
-    lastname: str = Field(..., title="Lastname")
-    email_address: str = Field(..., title="Email Address")
-    studentstatus: str = Field(..., title="Studentstatus")
-    start_date: date = Field(..., title="Start Date")
-    phd_start_date: date | None = Field(..., title="Phd Start Date")
-    end_date: date = Field(..., title="End Date")
-    cid: str = Field(..., title="Cid")
-    supervisors: list[Supervisor] = Field(..., title="Supervisors")
+# class CohortRegulations(BaseModel):
+#     cohort: str = Field(..., title="Cohort")
+#     pass_mark: int = Field(..., title="Pass Mark")
 
 
-class WorkloadActivity(BaseModel):
-    category: WorkloadCategory
-    type: WorkloadType
-    label: str = Field(..., title="Label")
-    quantity: int = Field(..., title="Quantity")
-    unit_load: int = Field(..., title="Unit Load")
-    activity_load: int = Field(..., title="Activity Load")
+# class DegreeRead(BaseModel):
+#     cohort: str = Field(..., title="Cohort")
+#     degree_code: str = Field(..., title="Degree Code")
+#     degree_name: str = Field(..., title="Degree Name")
 
 
-class AdminRoleWorkload(BaseModel):
-    login: str = Field(..., title="Login")
-    activities: list[WorkloadActivity] = Field(..., title="Activities")
+# class EnrolledStudentRead(BaseModel):
+#     login: str = Field(..., title="Login")
+#     email: str = Field(..., title="Email")
+#     lastname: str = Field(..., title="Lastname")
+#     firstname: str = Field(..., title="Firstname")
+#     level: int = Field(..., title="Level")
+#     status: str = Field(..., title="Status")
+#     cohort: str = Field(..., title="Cohort")
 
 
-class OverheadsWorkload(BaseModel):
-    login: str = Field(..., title="Login")
-    activities: list[WorkloadActivity] = Field(..., title="Activities")
+# class ExamCandidate(BaseModel):
+#     cid: str = Field(..., title="Cid")
+#     exam_class: str = Field(..., title="Exam Class")
+#     login: str = Field(..., title="Login")
+#     first_name: str = Field(..., title="First Name")
+#     last_name: str = Field(..., title="Last Name")
 
 
-class SupervisionWorkload(BaseModel):
-    login: str = Field(..., title="Login")
-    activities: list[WorkloadActivity] = Field(..., title="Activities")
+# class ExamRegistrations(BaseModel):
+#     exam_code: str = Field(..., title="Exam Code")
+#     students: list[ExamCandidate] = Field(..., title="Students")
+
+
+# class GUTARead(BaseModel):
+#     login: str = Field(..., title="Login")
+#     email: str = Field(..., title="Email")
+#     lastname: str = Field(..., title="Lastname")
+#     firstname: str = Field(..., title="Firstname")
+#     role: str = Field(..., title="Role")
+
+
+# class ModuleConsolidationMetadata(BaseModel):
+#     academic_year: str = Field(..., title="Academic Year")
+#     exam_class: str = Field(..., title="Exam Class")
+#     exam_code: str = Field(..., title="Exam Code")
+#     pass_mark: int | None = Field(..., title="Pass Mark")
+#     exam_contribution: int | None = Field(..., title="Exam Contribution")
+#     coursework_contribution: int | None = Field(..., title="Coursework Contribution")
+#     exam_questions_total: int | None = Field(..., title="Exam Questions Total")
+#     exam_questions_needed: int | None = Field(..., title="Exam Questions Needed")
+
+
+# class ModuleEnrolmentDetails(BaseModel):
+#     module_code: str = Field(..., title="Module Code")
+#     students: list[str] = Field(..., title="Students")
+
+
+# class ModuleExamCode(BaseModel):
+#     department_code: str = Field(..., title="Department Code")
+#     registry_code: str = Field(..., title="Registry Code")
+#     title: str = Field(..., title="Title")
+
+
+# class ModuleOverview(BaseModel):
+#     registry_code: str = Field(..., title="Registry Code")
+#     title: str = Field(..., title="Title")
+
+
+# class ModuleReadBase(BaseModel):
+#     code: str = Field(..., title="Code")
+#     title: str = Field(..., title="Title")
+#     ects: float = Field(..., title="Ects")
+
+
+# class ModuleReadOptimised(BaseModel):
+#     code: str = Field(..., title="Code")
+#     title: str = Field(..., title="Title")
+#     ects: float = Field(..., title="Ects")
+#     terms: list[int] = Field(..., title="Terms")
+#     applicable_cohorts: list[str] = Field(..., title="Applicable Cohorts")
+#     exam_contribution: int | None = Field(..., title="Exam Contribution")
+#     coursework_contribution: int | None = Field(..., title="Coursework Contribution")
+#     exam_questions_total: int | None = Field(..., title="Exam Questions Total")
+#     exam_questions_needed: int | None = Field(..., title="Exam Questions Needed")
+
+
+# class ModuleWorkload(BaseModel):
+#     code: str = Field(..., title="Code")
+#     title: str = Field(..., title="Title")
+#     lecture_hours: int | None = Field(..., title="Lecture Hours")
+#     tutorial_hours: int | None = Field(..., title="Tutorial Hours")
+#     population_estimate: int | None = Field(..., title="Population Estimate")
+#     has_exam: bool = Field(..., title="Has Exam")
+#     unit_load: int = Field(..., title="Unit Load")
+#     quantity: float = Field(..., title="Quantity")
+#     activity_load: float = Field(..., title="Activity Load")
+
+
+# class PersonIdentityRead(BaseModel):
+#     login: str = Field(..., title="Login")
+#     email: str = Field(..., title="Email")
+#     is_staff: bool = Field(..., title="Is Staff")
+#     category: str | None = Field(..., title="Category")
+
+
+# class PersonalTutee(BaseModel):
+#     login: str = Field(..., title="Login")
+#     lastname: str | None = Field(..., title="Lastname")
+#     firstname: str | None = Field(..., title="Firstname")
+#     cohort: str = Field(..., title="Cohort")
+
+
+# class PersonalTutoringAllocation(BaseModel):
+#     tutor: Person
+#     tutee: PersonalTutee
+
+
+# class RegulationGroup(BaseModel):
+#     label: str = Field(..., title="Label")
+#     maximum_selection: float = Field(..., title="Maximum Selection")
+#     minimum_selection: float = Field(..., title="Minimum Selection")
+#     modules: list[ModuleReadOptimised] = Field(..., title="Modules")
+
+
+# class RestrictedStudentPersonalDetails(BaseModel):
+#     login: str = Field(..., title="Login")
+#     email: str = Field(..., title="Email")
+#     lastname: str = Field(..., title="Lastname")
+#     firstname: str = Field(..., title="Firstname")
+#     salutation: str | None = Field(..., title="Salutation")
+#     year: str = Field(..., title="Year")
+#     role_in_department: RoleInDepartment = Field(..., title="Role In Department")
+#     cohort: str = Field(..., title="Cohort")
+#     cid: str = Field(..., title="Cid")
+#     exam_class: str = Field(..., title="Exam Class")
+#     degree_code: str = Field(..., title="Degree Code")
+#     degree_year: str = Field(..., title="Degree Year")
+#     student_status: str = Field(..., title="Student Status")
+#     entry_year: int | None = Field(..., title="Entry Year")
+#     fee_status: str | None = Field(..., title="Fee Status")
+#     personal_tutor: Person | None
+
+
+# class SgtTutor(BaseModel):
+#     login: str = Field(..., title="Login")
+
+
+# class SimpleModuleRead(BaseModel):
+#     title: str = Field(..., title="Title")
+#     code: str = Field(..., title="Code")
+#     syllabus_label: str = Field(..., title="Syllabus Label")
+
+
+# class SimpleStaffPersonalDetails(BaseModel):
+#     login: str = Field(..., title="Login")
+#     email: str = Field(..., title="Email")
+#     lastname: str = Field(..., title="Lastname")
+#     firstname: str = Field(..., title="Firstname")
+#     salutation: str | None = Field(..., title="Salutation")
+#     role_in_department: RoleInDepartment = Field(..., title="Role In Department")
+
+
+# class StaffDetails(BaseModel):
+#     login: str = Field(..., title="Login")
+#     email: str = Field(..., title="Email")
+#     lastname: str = Field(..., title="Lastname")
+#     firstname: str = Field(..., title="Firstname")
+#     salutation: str | None = Field(..., title="Salutation")
+#     year: str = Field(..., title="Year")
+#     role_in_department: RoleInDepartment = Field(..., title="Role In Department")
+#     category: str = Field(..., title="Category")
+#     fte: float = Field(..., title="Fte")
+#     roles_in_department: list[str] = Field(..., title="Roles In Department")
+#     has_extension_clearance: bool = Field(..., title="Has Extension Clearance")
+#     has_phd_students: bool = Field(..., title="Has Phd Students")
+#     modules: list[ModuleRoleReadOptimised] | None = Field(
+#         default_factory=list, title="Modules"
+#     )
+
+
+# class StaffModuleWorkload(BaseModel):
+#     login: str = Field(..., title="Login")
+#     modules: list[ModuleWorkload] = Field(..., title="Modules")
+
+
+# class StaffRead(BaseModel):
+#     login: str = Field(..., title="Login")
+#     email: str = Field(..., title="Email")
+#     role_in_department: RoleInDepartment = Field(..., title="Role In Department")
+#     lastname: str = Field(..., title="Lastname")
+#     firstname: str = Field(..., title="Firstname")
+#     department: str = Field(..., title="Department")
+#     cid: str | None = Field(..., title="Cid")
+
+
+# class Status(BaseModel):
+#     status: str = Field(..., title="Status")
+#     version: str = Field(..., title="Version")
+#     environment: str = Field(..., title="Environment")
+#     testing: bool = Field(..., title="Testing")
+
+
+# class Supervisor(BaseModel):
+#     login: str = Field(..., title="Login")
+#     firstname: str = Field(..., title="Firstname")
+#     lastname: str = Field(..., title="Lastname")
+#     email_address: str = Field(..., title="Email Address")
+#     role: str = Field(..., title="Role")
+
+
+# class TotalEnrolmentDetails(BaseModel):
+#     total: int = Field(..., title="Total")
+
+
+# class TutorialGroup(BaseModel):
+#     number: int = Field(..., title="Number")
+#     type: str = Field(..., title="Type")
+#     tutor: SgtTutor
+#     uta: Person | None
+#     members: list[Person] = Field(..., title="Members")
+
+
+# class ValidationError(BaseModel):
+#     loc: list[str | int] = Field(..., title="Location")
+#     msg: str = Field(..., title="Message")
+#     type: str = Field(..., title="Error Type")
+
+
+# class WorkloadCategory(StrEnum):
+#     TEACHING = "TEACHING"
+#     RESEARCH = "RESEARCH"
+#     DEPARTMENTAL = "DEPARTMENTAL"
+#     COLLEGE = "COLLEGE"
+#     OTHER = "OTHER"
+#     PROFESSIONAL = "PROFESSIONAL"
+
+
+# class WorkloadType(StrEnum):
+#     PERSONAL_TUTORING = "PERSONAL_TUTORING"
+#     INDUSTRIAL_PLACEMENT = "INDUSTRIAL_PLACEMENT"
+#     FINAL_YEAR_PROJECT_SUPERVISION_UG = "FINAL_YEAR_PROJECT_SUPERVISION_UG"
+#     FINAL_YEAR_PROJECT_SUPERVISION_MSC = "FINAL_YEAR_PROJECT_SUPERVISION_MSC"
+#     ISO_SUPERVISION = "ISO_SUPERVISION"
+#     GROUP_PROJECT_SUPERVISION_MSC = "GROUP_PROJECT_SUPERVISION_MSC"
+#     GROUP_PROJECT_SUPERVISION_UG = "GROUP_PROJECT_SUPERVISION_UG"
+#     SGT_SUPERVISION = "SGT_SUPERVISION"
+#     PHD_SUPERVISION = "PHD_SUPERVISION"
+#     ADMIN_ROLE = "ADMIN_ROLE"
+#     PROJECT_SUPERVISION = "PROJECT_SUPERVISION"
+#     NON_COMMITTEE_MEMBER_PARTICIPATION_IN_RECRUITMENT_PROCESS = (
+#         "NON_COMMITTEE_MEMBER_PARTICIPATION_IN_RECRUITMENT_PROCESS"
+#     )
+#     DOC_MEETINGS = "DOC_MEETINGS"
+#     DOC_COMMUNITY_EVENTS = "DOC_COMMUNITY_EVENTS"
+#     MANAGING_OWN_WORKLOAD = "MANAGING_OWN_WORKLOAD"
+#     HEALTH_AND_SAFETY = "HEALTH_AND_SAFETY"
+#     AWARENESS_OF_POLICIES_AND_PROCEDURES_NOT_COUNTED_ELSEWHERE = (
+#         "AWARENESS_OF_POLICIES_AND_PROCEDURES_NOT_COUNTED_ELSEWHERE"
+#     )
+#     READING_COLLEGE_FACULTY_COMMUNICATIONS_AND_SURVEYS = (
+#         "READING_COLLEGE_FACULTY_COMMUNICATIONS_AND_SURVEYS"
+#     )
+#     COLLEGE_MANDATED_TRAINING = "COLLEGE_MANDATED_TRAINING"
+#     ATTENDANCE_AT_FACULTY_COLLEGE_EVENTS_WORKSHOPS = (
+#         "ATTENDANCE_AT_FACULTY_COLLEGE_EVENTS_WORKSHOPS"
+#     )
+#     PERSONAL_DEVELOPMENT = "PERSONAL_DEVELOPMENT"
+#     PROFESSIONAL_DEVELOPMENT = "PROFESSIONAL_DEVELOPMENT"
+#     SPARE_CAPACITY = "SPARE_CAPACITY"
+#     OTHER = "OTHER"
+#     PHD_CO_SUPERVISION = "PHD_CO_SUPERVISION"
+#     PHD_SECOND_MARKER = "PHD_SECOND_MARKER"
+#     PHD_EXAMINER_INTERNAL = "PHD_EXAMINER_INTERNAL"
+
+
+# class YearSummary(BaseModel):
+#     academic_year: str = Field(..., title="Academic Year")
+#     exam_class: str = Field(..., title="Exam Class")
+#     status: str = Field(..., title="Status")
+#     modules: list[ModuleExamCode] = Field(..., title="Modules")
+
+
+# class AppSchemasCustomCohortsStudentDetails(BaseModel):
+#     cid: str = Field(..., title="Cid")
+#     login: str = Field(..., title="Login")
+#     first_name: str = Field(..., title="First Name")
+#     last_name: str = Field(..., title="Last Name")
+
+
+# class CohortInformation(BaseModel):
+#     modules: list[ModuleOverview] = Field(..., title="Modules")
+#     students: list[AppSchemasCustomCohortsStudentDetails] = Field(..., title="Students")
+
+
+# class DegreeRegulations(BaseModel):
+#     degree_code: str = Field(..., title="Degree Code")
+#     cohort: str = Field(..., title="Cohort")
+#     credit_criteria: str = Field(..., title="Credit Criteria")
+#     degree_title: str = Field(..., title="Degree Title")
+#     degree_year: int = Field(..., title="Degree Year")
+#     regulations: list[RegulationGroup] = Field(..., title="Regulations")
+
+
+# class HTTPValidationError(BaseModel):
+#     detail: list[ValidationError] | None = Field(None, title="Detail")
+
+
+# class ModuleRead(BaseModel):
+#     code: str = Field(..., title="Code")
+#     title: str = Field(..., title="Title")
+#     ects: float = Field(..., title="Ects")
+#     terms: list[int] = Field(..., title="Terms")
+#     applicable_cohorts: list[str] = Field(..., title="Applicable Cohorts")
+#     cohort_regulations: list[CohortRegulations] = Field(..., title="Cohort Regulations")
+#     exam_contribution: int | None = Field(..., title="Exam Contribution")
+#     coursework_contribution: int | None = Field(..., title="Coursework Contribution")
+#     exam_questions_total: int | None = Field(..., title="Exam Questions Total")
+#     exam_questions_needed: int | None = Field(..., title="Exam Questions Needed")
+#     staff: list[StaffRead] | None = Field(default_factory=list, title="Staff")
+#     helpers: list[GUTARead] | None = Field(default_factory=list, title="Helpers")
+
+
+# class PhdStudent(BaseModel):
+#     login: str = Field(..., title="Login")
+#     firstname: str = Field(..., title="Firstname")
+#     lastname: str = Field(..., title="Lastname")
+#     email_address: str = Field(..., title="Email Address")
+#     studentstatus: str = Field(..., title="Studentstatus")
+#     start_date: date = Field(..., title="Start Date")
+#     phd_start_date: date | None = Field(..., title="Phd Start Date")
+#     end_date: date = Field(..., title="End Date")
+#     cid: str = Field(..., title="Cid")
+#     supervisors: list[Supervisor] = Field(..., title="Supervisors")
+
+
+# class WorkloadActivity(BaseModel):
+#     category: WorkloadCategory
+#     type: WorkloadType
+#     label: str = Field(..., title="Label")
+#     quantity: int = Field(..., title="Quantity")
+#     unit_load: int = Field(..., title="Unit Load")
+#     activity_load: int = Field(..., title="Activity Load")
+
+
+# class AdminRoleWorkload(BaseModel):
+#     login: str = Field(..., title="Login")
+#     activities: list[WorkloadActivity] = Field(..., title="Activities")
+
+
+# class OverheadsWorkload(BaseModel):
+#     login: str = Field(..., title="Login")
+#     activities: list[WorkloadActivity] = Field(..., title="Activities")
+
+
+# class SupervisionWorkload(BaseModel):
+#     login: str = Field(..., title="Login")
+#     activities: list[WorkloadActivity] = Field(..., title="Activities")

@@ -1,6 +1,8 @@
 from typing import Protocol
 
-from app.doc_upstream_services.abc.schemas import RestrictedStudentPersonalDetails
+from app.doc_upstream_services.abc.schemas import (
+    AppSchemasCustomPeopleDetailsStudentDetails,
+)
 
 
 class Authenticator(Protocol):
@@ -14,10 +16,11 @@ class AbcUpstreamService(Protocol):
     This interface ensures type compatibility between the real and the mock connectors.
     """
 
-    def get_student(
+    def student_info(
         self,
+        usernames: list[str] | None,
         year: str,
-        login: str,
+        cohorts: list[str] | None = None,
         proxied_user: str | None = None,
-    ) -> RestrictedStudentPersonalDetails:
-        """ABC API returns current student record"""
+    ) -> list[AppSchemasCustomPeopleDetailsStudentDetails]:
+        """ABC API can provide a student's personal information"""

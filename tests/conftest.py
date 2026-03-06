@@ -104,7 +104,7 @@ def abc_patched_client_fixture(app):
 
     Usage:
         abc_config = {
-            "get_student": RestrictedStudentPersonalDetails(...),
+            "student_info": list[AppSchemasCustomPeopleDetailsStudentDetails],
         }
 
         with abc_patched_client(abc_config) as client:
@@ -126,9 +126,9 @@ def abc_patched_client_fixture(app):
 
 
 @pytest.fixture(name="student_abc_config")
-def student_abc_config(restricted_student_personal_details_factory):
+def student_abc_config(student_info):
     return {
-        "get_student": restricted_student_personal_details_factory(
+        "student_info": student_info(
             login="hpotter",
             degree_year="mc3",
         )
