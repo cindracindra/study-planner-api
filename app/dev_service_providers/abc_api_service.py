@@ -441,6 +441,6 @@ class DummyAbcAPIService(AbcUpstreamService):
                         for username in usernames
                         if username in FAKE_STUDENT_INFO
                     ]
-                )
+                ).encode()
             )
         )

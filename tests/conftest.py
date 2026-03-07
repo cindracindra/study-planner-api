@@ -14,12 +14,15 @@ from requests.auth import HTTPBasicAuth
 from sqlalchemy_utils import create_database, database_exists, drop_database
 from sqlmodel import Session, create_engine
 
+from app import create_application
 from app.doc_upstream_services.abc.api_service import AbcAPIService
 from app.doc_upstream_services.abc.deserialisation import S
 from app.factories import orm_factories, abc_factories
 from app.utils.factories import set_factories_session
 
-TEST_DB_SERVER_URL: str = os.environ.get("TEST_DB_SERVER_URL", "postgresql://") # TODO: Set up test database 
+TEST_DB_SERVER_URL: str = os.environ.get(
+    "TEST_DB_SERVER_URL", "postgresql://"
+)  # TODO: Set up test database
 HPOTTER_CREDENTIALS = HTTPBasicAuth(username="hpotter", password="leviosa")
 ADUMBLE_CREDENTIALS = HTTPBasicAuth(username="adumble", password="password")
 
@@ -126,10 +129,16 @@ def abc_patched_client_fixture(app):
 
 
 @pytest.fixture(name="student_abc_config")
-def student_abc_config(student_info):
+def student_abc_config(
+    app_schemas_custom_people_details_student_details_factory,
+    module_level_read_optimised_factory,
+):
     return {
-        "student_info": student_info(
+        "student_info": app_schemas_custom_people_details_student_details_factory(
             login="hpotter",
-            degree_year="mc3",
+            modules=[
+                module_level_read_optimised_factory(code="60001"),
+                module_level_read_optimised_factory(code="60002"),
+            ],
         )
     }

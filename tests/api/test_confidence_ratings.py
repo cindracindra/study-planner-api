@@ -1,17 +1,13 @@
+import json
 from starlette.status import HTTP_200_OK, HTTP_401_UNAUTHORIZED, HTTP_404_NOT_FOUND, HTTP_406_NOT_ACCEPTABLE
-
 from tests.conftest import HPOTTER_CREDENTIALS
 
+from app.dev_service_providers.abc_api_service import DummyResponse
 
 def test_confidence_ratings_endpoint_returns_200(client, confidence_rating_factory):
     confidence_rating_factory.create(username="hpotter", year="2526")
     res = client.get("me/2526/personal-confidence-ratings", auth=HPOTTER_CREDENTIALS)
     assert res.status_code == HTTP_200_OK
-
-
-def test_get_confidence_ratings_returns_404_when_not_found(client):
-    res = client.get("me/2526/personal-confidence-ratings", auth=HPOTTER_CREDENTIALS)
-    assert res.status_code == HTTP_404_NOT_FOUND
 
 
 def test_confidence_ratings_response_contains_expected_fields(

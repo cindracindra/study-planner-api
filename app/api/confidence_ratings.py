@@ -10,7 +10,12 @@ from app.schemas.confidence_ratings import (
     ModuleRatingRead,
     ModuleRatingUpdate,
 )
-from app.utils.sync_helpers import get_sync_status, needs_sync, update_sync_status, create_missing_ratings
+from app.utils.sync_helpers import (
+    get_sync_status,
+    needs_sync,
+    update_sync_status,
+    create_missing_ratings,
+)
 
 
 confidence_ratings_router = APIRouter(
@@ -21,9 +26,7 @@ confidence_ratings_router = APIRouter(
 
 @confidence_ratings_router.get("", response_model=ConfidenceRatingRead)
 def get_personal_confidence_ratings(
-    module_codes: list[str] | None = Query(
-        None, alias="module_code"
-    ),
+    module_codes: list[str] | None = Query(None, alias="module_code"),
     year: str = Path(..., description="Academic year in short form e.g. 2324"),
     username: str = Depends(get_current_user),
     session: Session = Depends(get_session),
@@ -47,7 +50,9 @@ def get_personal_confidence_ratings(
 
     result = session.exec(query).first()
     if not result:
-        raise HTTPException(status_code=404, detail="Confidence rating not found")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Confidence rating not found"
+        )
     return result
 
 

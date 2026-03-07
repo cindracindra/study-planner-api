@@ -1,10 +1,12 @@
 import json
+from fastapi import Depends
 from datetime import datetime, timedelta, timezone
 from sqlmodel import Session, select
 from app.models.confidence_ratings import ConfidenceRating, ModuleRating
 from app.models.user_sync_status import UserSyncStatus
+from app.protocols import AbcUpstreamService
 
-from app.dependencies.main import get_abc_service_handler
+from app.dependencies.main import get_abc_service_handler, get_settings
 
 SYNC_INTERVAL = timedelta(hours=24)
 
@@ -80,9 +82,10 @@ def get_module_list(
     year: str,
     username: str,
 ) -> list[str]:
-    response = get_abc_service_handler.student_info(usernames=[username], year=year)
-
-    data = json.loads(response.response.content)
+    settings = get_settings()
+    abc_service = get_abc_service_handler(settings)
+    response = abc_service.student_info(usernames=[username], year=year)
+    data = json.loads(response.content)
 
     if not data:
         return []

@@ -9,4 +9,4 @@ class UserSyncStatus(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     username: str = Field(index=True)
     year: str = Field(index=True)
-    last_synced: datetime = Field(default_factory=datetime.now(timezone.utc))
+    last_synced: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
