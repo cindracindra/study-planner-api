@@ -7,10 +7,11 @@ from app.constants.static_quotes import FALLBACK_EXCUSES, FALLBACK_QUOTES
 def get_random_quote() -> dict:
     """Fetch quote from external API, fall back to static list."""
     try:
-        response = requests.get("https://api.quotable.io/random", timeout=2.0)
+        response = requests.get("https://zenquotes.io/api/random", timeout=5.0)
+
         if response.status_code == 200:
             data = response.json()
-            return {"text": data["content"]}
+            return data[0]["q"]
     except Exception:
         pass
 
