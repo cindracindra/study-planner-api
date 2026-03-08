@@ -75,10 +75,13 @@ def update_daily_banner(
                 detail="display_text is required for custom banner.",
             )
         result.display_text = banner_update.display_text
+        result.banner_type = "custom"
     elif banner_update.banner_type == "excuse":
         result.display_text = get_random_excuse()
+        result.banner_type = "excuse"
     else:
         result.display_text = get_random_quote()
+        result.banner_type = "quote"
 
     session.commit()
     return result
