@@ -1,5 +1,6 @@
 # ruff: noqa: E402
 import os
+import json
 from contextlib import contextmanager
 from unittest import mock
 from unittest.mock import Mock
@@ -19,6 +20,8 @@ from app.doc_upstream_services.abc.api_service import AbcAPIService
 from app.doc_upstream_services.abc.deserialisation import S
 from app.factories import orm_factories, abc_factories
 from app.utils.factories import set_factories_session
+
+from app.dev_service_providers.abc_api_service import DummyResponse
 
 TEST_DB_SERVER_URL: str = os.environ.get(
     "TEST_DB_SERVER_URL", "postgresql://"
@@ -133,12 +136,15 @@ def student_abc_config(
     app_schemas_custom_people_details_student_details_factory,
     module_level_read_optimised_factory,
 ):
+    student = app_schemas_custom_people_details_student_details_factory(
+        login="hpotter",
+        modules=[
+            module_level_read_optimised_factory(code="60001"),
+            module_level_read_optimised_factory(code="60002"),
+        ],
+    )
     return {
-        "student_info": app_schemas_custom_people_details_student_details_factory(
-            login="hpotter",
-            modules=[
-                module_level_read_optimised_factory(code="60001"),
-                module_level_read_optimised_factory(code="60002"),
-            ],
+        "student_info": DummyResponse(
+            content=json.dumps([student.model_dump()]).encode()
         )
     }

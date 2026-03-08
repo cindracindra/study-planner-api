@@ -1,10 +1,7 @@
-import json
-from fastapi import Depends
 from datetime import datetime, timedelta, timezone
 from sqlmodel import Session, select
 from app.models.confidence_ratings import ConfidenceRating, ModuleRating
 from app.models.user_sync_status import UserSyncStatus
-from app.protocols import AbcUpstreamService
 
 from app.dependencies.main import get_abc_service_handler, get_settings
 
@@ -20,13 +17,14 @@ def get_sync_status(
     return session.exec(query).first()
 
 
-def needs_sync(sync_status: UserSyncStatus | None) -> bool:
+def needs_sync(sync_status) -> bool:
     if sync_status is None:
         return True
-    return datetime.now(timezone.utc) - sync_status.last_synced > SYNC_INTERVAL
+    last_synced = sync_status.last_synced.replace(tzinfo=timezone.utc)
+    return datetime.now(timezone.utc) - last_synced > SYNC_INTERVAL
 
 
-def update_sync_status(session: Session, year: str, username: str): 
+def update_sync_status(session: Session, year: str, username: str):
     sync_status = get_sync_status(session, year, username)
     if sync_status:
         sync_status.last_synced = datetime.now(timezone.utc)
@@ -36,7 +34,6 @@ def update_sync_status(session: Session, year: str, username: str):
             year=year, username=username, last_synced=datetime.now(timezone.utc)
         )
         session.add(sync_status)
-    session.commit()
 
 
 def create_missing_ratings(
@@ -53,15 +50,19 @@ def create_missing_ratings(
     if not confidence_rating:
         confidence_rating = ConfidenceRating(year=year, username=username)
         session.add(confidence_rating)
-        session.commit()
+        session.flush()
         session.refresh(confidence_rating)
 
     modules = get_module_list(year, username)
     if not modules:
         return
 
+    existing_ratings_query = select(ModuleRating).where(
+        ModuleRating.confidence_rating_id == confidence_rating.id
+    )
     existing_keys = {
-        (mr.module_code, mr.term_week) for mr in confidence_rating.module_ratings
+        (mr.module_code, mr.term_week) 
+        for mr in session.exec(existing_ratings_query).all()
     }
 
     for module_code in modules:
@@ -75,22 +76,13 @@ def create_missing_ratings(
                 )
                 session.add(new_module_rating)
 
-    session.commit()
 
-
-def get_module_list(
-    year: str,
-    username: str,
-) -> list[str]:
-    settings = get_settings()
-    abc_service = get_abc_service_handler(settings)
+def get_module_list(year: str, username: str) -> list[str]:
+    abc_service = get_abc_service_handler(get_settings())
     response = abc_service.student_info(usernames=[username], year=year)
-    data = json.loads(response.content)
-
+    data = response.json_content
     if not data:
         return []
-
     student = data[0]
     modules = student.get("modules", [])
-
     return [module["code"] for module in modules]

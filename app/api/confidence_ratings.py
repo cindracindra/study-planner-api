@@ -1,5 +1,4 @@
 from fastapi import APIRouter, Depends, Path, Query, HTTPException
-from sqlalchemy import or_
 from sqlmodel import Session, select
 from starlette import status
 
@@ -26,11 +25,12 @@ confidence_ratings_router = APIRouter(
 
 @confidence_ratings_router.get("", response_model=ConfidenceRatingRead)
 def get_personal_confidence_ratings(
-    module_codes: list[str] | None = Query(None, alias="module_code"),
+    module_codes: list[str] | None = Query(None),
     year: str = Path(..., description="Academic year in short form e.g. 2324"),
     username: str = Depends(get_current_user),
     session: Session = Depends(get_session),
 ):
+
     sync_status = get_sync_status(session, year, username)
     if needs_sync(sync_status):
         create_missing_ratings(session, year, username, total_weeks=11)
@@ -41,19 +41,26 @@ def get_personal_confidence_ratings(
         ConfidenceRating.username == username,
     )
 
-    if module_codes:
-        query = query.where(
-            ConfidenceRating.module_ratings.any(
-                ModuleRating.module_code.in_(module_codes)
-            )
-        )
-
     result = session.exec(query).first()
     if not result:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Confidence rating not found"
         )
-    return result
+
+    if not module_codes:
+        return result
+
+    ratings_query = select(ModuleRating).where(
+        ModuleRating.confidence_rating_id == result.id,
+        ModuleRating.module_code.in_(module_codes),
+    )
+
+    return ConfidenceRatingRead(
+        id=result.id,
+        year=result.year,
+        username=result.username,
+        module_ratings=list(session.exec(ratings_query).all()) if module_codes else [],
+    )
 
 
 @confidence_ratings_router.patch(
