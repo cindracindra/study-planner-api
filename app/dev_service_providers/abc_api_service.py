@@ -16,8 +16,13 @@ class DummyResponse:
     status_code: int = 200
     headers: list | None = None
 
+    @property
+    def json_content(self) -> dict | list:
+        return json.loads(self.content) if self.content is not None else None
+
     def json(self):
         return json.loads(self.content) if self.content is not None else None
+    
 
 
 class DummyAbcAPIService(AbcUpstreamService):
@@ -431,16 +436,14 @@ class DummyAbcAPIService(AbcUpstreamService):
             },
         }
 
-        return AppSchemasCustomPeopleDetailsStudentDetails(
-            response=DummyResponse(
-                content=json.dumps(
-                    list(FAKE_STUDENT_INFO.values())
-                    if usernames is None
-                    else [
-                        FAKE_STUDENT_INFO[username]
-                        for username in usernames
-                        if username in FAKE_STUDENT_INFO
-                    ]
-                ).encode()
-            )
+        return DummyResponse(
+            content=json.dumps(
+                list(FAKE_STUDENT_INFO.values())
+                if usernames is None
+                else [
+                    FAKE_STUDENT_INFO[username]
+                    for username in usernames
+                    if username in FAKE_STUDENT_INFO
+                ]
+            ).encode()
         )
