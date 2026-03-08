@@ -6,8 +6,8 @@ from datetime import date
 
 from app.dependencies.main import get_current_user, get_session
 from app.clients.quotes_client import get_random_excuse, get_random_quote
-from app.models.banner import DailyBanner
-from app.schemas.banner import DailyBannerRead, DailyBannerWrite
+from app.models.banner import Banner
+from app.schemas.banner import BannerRead, BannerWrite
 
 banner_router = APIRouter(
     prefix="/me/{year}/banner",
@@ -15,20 +15,20 @@ banner_router = APIRouter(
 )
 
 
-@banner_router.get("", response_model=DailyBannerRead)
+@banner_router.get("", response_model=BannerRead)
 def get_daily_banner(
     year: str = Path(..., description="Academic year in short form e.g. 2324"),
     username: str = Depends(get_current_user),
     session: Session = Depends(get_session),
 ):
-    query = select(DailyBanner).where(
-        DailyBanner.year == year,
-        DailyBanner.username == username,
+    query = select(Banner).where(
+        Banner.year == year,
+        Banner.username == username,
     )
     result = session.exec(query).first()
 
     if not result:
-        result = DailyBanner(
+        result = Banner(
             year=year,
             username=username,
             date=date.today(),
@@ -50,16 +50,16 @@ def get_daily_banner(
     return result
 
 
-@banner_router.patch("", response_model=DailyBannerRead)
+@banner_router.patch("", response_model=BannerRead)
 def update_daily_banner(
-    banner_update: DailyBannerWrite,
+    banner_update: BannerWrite,
     year: str = Path(..., description="Academic year in short form e.g. 2324"),
     username: str = Depends(get_current_user),
     session: Session = Depends(get_session),
 ):
-    query = select(DailyBanner).where(
-        DailyBanner.year == year,
-        DailyBanner.username == username,
+    query = select(Banner).where(
+        Banner.year == year,
+        Banner.username == username,
     )
     result = session.exec(query).first()
 

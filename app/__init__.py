@@ -2,6 +2,7 @@ from fastapi import FastAPI
 
 from app.api.confidence_ratings import confidence_ratings_router
 from app.api.tasks import tasks_router
+from app.api.banner import banner_router
 from app.settings import Settings
 
 tags_metadata = [
@@ -13,6 +14,10 @@ tags_metadata = [
         "name": "personal confidence ratings",
         "description": "Summary and update of personal confidence ratings for modules",
     },
+    {
+        "name": "banner",
+        "description": "Fetch and update of quotes, excuse and custom quotes for banner",
+    }
 ]
 
 
@@ -32,7 +37,7 @@ def create_application() -> FastAPI:
         docs_url="/",
     )
     
-    routers = [tasks_router, confidence_ratings_router]
+    routers = [tasks_router, confidence_ratings_router, banner_router]
     
     for router in routers:
         rest_api.include_router(router)

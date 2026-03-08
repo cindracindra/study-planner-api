@@ -30,7 +30,6 @@ def get_personal_confidence_ratings(
     username: str = Depends(get_current_user),
     session: Session = Depends(get_session),
 ):
-
     sync_status = get_sync_status(session, year, username)
     if needs_sync(sync_status):
         create_missing_ratings(session, year, username, total_weeks=11)

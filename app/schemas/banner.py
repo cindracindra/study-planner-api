@@ -3,7 +3,7 @@ from sqlmodel import SQLModel
 from typing import Literal, Optional
 
 
-class DailyBannerRead(SQLModel):
+class BannerRead(SQLModel):
     id: int
     year: str
     username: str
@@ -12,6 +12,6 @@ class DailyBannerRead(SQLModel):
     display_text: str
 
 
-class DailyBannerWrite(SQLModel):
+class BannerWrite(SQLModel):
     banner_type: Literal["quote", "excuse", "custom"]
     display_text: Optional[str] = None
