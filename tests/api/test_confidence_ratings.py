@@ -1,8 +1,5 @@
-import json
 from starlette.status import HTTP_200_OK, HTTP_401_UNAUTHORIZED, HTTP_404_NOT_FOUND, HTTP_406_NOT_ACCEPTABLE
 from tests.conftest import HPOTTER_CREDENTIALS
-
-from app.dev_service_providers.abc_api_service import DummyResponse
 
 
 def test_confidence_ratings_endpoint_returns_200(
