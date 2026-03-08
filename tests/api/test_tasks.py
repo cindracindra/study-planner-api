@@ -1,4 +1,9 @@
-from starlette.status import HTTP_200_OK
+from starlette.status import (
+    HTTP_200_OK,
+    HTTP_204_NO_CONTENT,
+    HTTP_404_NOT_FOUND,
+    HTTP_422_UNPROCESSABLE_CONTENT,
+)
 from freezegun import freeze_time
 
 from tests.conftest import HPOTTER_CREDENTIALS
@@ -95,7 +100,7 @@ def test_create_task_with_missing_title_returns_422(client):
         json={"creation_date": "2026-02-28"},
         auth=HPOTTER_CREDENTIALS,
     )
-    assert res.status_code == 422
+    assert res.status_code == HTTP_422_UNPROCESSABLE_CONTENT
 
 
 def test_create_task_with_invalid_date_format_returns_422(client):
@@ -104,36 +109,42 @@ def test_create_task_with_invalid_date_format_returns_422(client):
         json={"title": "Test", "creation_date": "28/02/2026"},
         auth=HPOTTER_CREDENTIALS,
     )
-    assert res.status_code == 422
+    assert res.status_code == HTTP_422_UNPROCESSABLE_CONTENT
 
 
 def test_update_task_completion(client, task_factory):
     task = task_factory.create(
-        username="hpotter", year="2526", task_completed=False, creation_date="2026-02-28"
+        username="hpotter",
+        year="2526",
+        task_completed=False,
+        creation_date="2026-02-28",
     )
     res = client.patch(
         f"me/2526/personal-tasks/{task.id}",
         json={"task_completed": True},
         auth=HPOTTER_CREDENTIALS,
     )
-    assert res.status_code == 200
+    assert res.status_code == HTTP_200_OK
     updated_task = res.json()
     assert updated_task["task_completed"] is True
 
 
 def test_get_task_by_id(client, task_factory):
     task = task_factory.create(
-        username="hpotter", year="2526", task_completed=False, creation_date="2026-02-28"
+        username="hpotter",
+        year="2526",
+        task_completed=False,
+        creation_date="2026-02-28",
     )
     res = client.get(f"me/2526/personal-tasks/{task.id}", auth=HPOTTER_CREDENTIALS)
-    assert res.status_code == 200
+    assert res.status_code == HTTP_200_OK
     retrieved_task = res.json()
     assert retrieved_task["id"] == task.id
 
 
 def test_get_nonexistent_task_returns_404(client):
     res = client.get("me/2526/personal-tasks/9999", auth=HPOTTER_CREDENTIALS)
-    assert res.status_code == 404
+    assert res.status_code == HTTP_404_NOT_FOUND
 
 
 def test_update_nonexistent_task_returns_404(client):
@@ -142,15 +153,18 @@ def test_update_nonexistent_task_returns_404(client):
         json={"task_completed": True},
         auth=HPOTTER_CREDENTIALS,
     )
-    assert res.status_code == 404
+    assert res.status_code == HTTP_404_NOT_FOUND
 
 
 def test_delete_task_endpoint(client, task_factory):
     task = task_factory.create(
-        username="hpotter", year="2526", task_completed=False, creation_date="2026-02-28"
+        username="hpotter",
+        year="2526",
+        task_completed=False,
+        creation_date="2026-02-28",
     )
     res = client.delete(f"me/2526/personal-tasks/{task.id}", auth=HPOTTER_CREDENTIALS)
-    assert res.status_code == 204
-    # Verify the task is deleted
+    assert res.status_code == HTTP_204_NO_CONTENT
+
     get_res = client.get(f"/me/2526/personal-tasks/{task.id}", auth=HPOTTER_CREDENTIALS)
-    assert get_res.status_code == 404
+    assert get_res.status_code == HTTP_404_NOT_FOUND

@@ -86,11 +86,11 @@ def test_update_module_rating(client, confidence_rating_factory, module_rating_f
         auth=HPOTTER_CREDENTIALS,
     )
 
-    if res.status_code != 200:
+    if res.status_code != HTTP_200_OK:
         print(f"Response: {res.json()}")
         print(f"Module rating ID: {module_rating.id}")
 
-    assert res.status_code == 200
+    assert res.status_code == HTTP_200_OK
     assert res.json()["rating"] == 5
 
 
