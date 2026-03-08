@@ -39,3 +39,4 @@ def downgrade():
     op.drop_index(op.f('ix_banners_username'), table_name='banners')
     op.drop_table('banners')
     # ### end Alembic commands ###
+
