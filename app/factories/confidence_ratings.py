@@ -1,6 +1,6 @@
 import string
 
-from factory import Faker, SubFactory
+from factory import Faker
 from factory.alchemy import SQLAlchemyModelFactory
 from app.factories.factory import *
 

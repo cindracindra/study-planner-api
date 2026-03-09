@@ -25,7 +25,7 @@ from app.dev_service_providers.abc_api_service import DummyResponse
 
 TEST_DB_SERVER_URL: str = os.environ.get(
     "TEST_DB_SERVER_URL", "postgresql://"
-)  # TODO: Set up test database
+) 
 HPOTTER_CREDENTIALS = HTTPBasicAuth(username="hpotter", password="leviosa")
 ADUMBLE_CREDENTIALS = HTTPBasicAuth(username="adumble", password="password")
 

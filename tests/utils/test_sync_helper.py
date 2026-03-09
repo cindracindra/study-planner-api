@@ -2,8 +2,7 @@ from datetime import datetime, timedelta, timezone
 from unittest.mock import Mock, patch
 from sqlmodel import select
 
-from app.utils.sync_helpers import get_module_list, create_missing_ratings, needs_sync, update_sync_status
-from app.models.user_sync_status import UserSyncStatus
+from app.utils.sync_helpers import get_module_list, create_missing_ratings, needs_sync
 from app.models.confidence_ratings import ConfidenceRating, ModuleRating
 
 

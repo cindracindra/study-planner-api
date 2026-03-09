@@ -32,5 +32,5 @@ def test_get_random_quote_real_api():
     result = get_random_quote()
     assert isinstance(result, str)
     assert len(result) > 0
-    assert result not in FALLBACK_QUOTES  # proves it came from the API
+    assert result not in FALLBACK_QUOTES
     print(f"Got quote from API: {result}")

@@ -1,9 +1,6 @@
 import json
 from dataclasses import dataclass
 
-from fastapi import HTTPException
-from starlette import status
-
 from app.doc_upstream_services.abc.schemas import (
     AppSchemasCustomPeopleDetailsStudentDetails,
 )
