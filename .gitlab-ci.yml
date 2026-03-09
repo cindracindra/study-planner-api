@@ -121,8 +121,8 @@ test:
       - $POETRY_CACHE_DIR
     policy: pull
   script:
-    - echo "TEST_DB_SERVER_URL is $TEST_DB_SERVER_URL"
-    - poetry run python -c "import os; print(os.environ.get('TEST_DB_SERVER_URL', 'NOT SET'))"
+    - apt-get update && apt-get install -y postgresql-client
+    - until pg_isready -h db-service -U test_user; do echo "Waiting for postgres...";
     - poetry run pytest --junitxml=report.xml --cov=app/ tests/
     - poetry run coverage xml
   coverage: '/(?i)total.*? (100(?:\.0+)?\%|[1-9]?\d(?:\.\d+)?\%)$/'
