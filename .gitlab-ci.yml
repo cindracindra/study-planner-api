@@ -122,8 +122,8 @@ test:
       - $POETRY_CACHE_DIR
     policy: pull
   script:
-    - docker logs $(docker ps -q --filter "name=postgres") 2>&1 || echo "Could not get logs"
-    - apt-get update && apt-get install -y postgresql-client
+    - apt-get update && apt-get install -y postgresql-client netcat-openbsd
+    - nc -zv db-service 5432 || echo "Port 5432 not reachable"
     - timeout 60 bash -c "until pg_isready -h db-service -U test_user; do echo 'Waiting for postgres...'; sleep 1; done"
     - echo "TEST_DB_SERVER_URL is $TEST_DB_SERVER_URL"
     - poetry run pytest --junitxml=report.xml --cov=app/ tests/
