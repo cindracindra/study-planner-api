@@ -42,6 +42,8 @@ cache dependencies:
       - $PIP_CACHE_DIR
       - $POETRY_CACHE_DIR
     policy: push
+  tags:
+    - edtech
 
 check style:
   stage: lint
@@ -63,6 +65,8 @@ check style:
       - $PIP_CACHE_DIR
       - $POETRY_CACHE_DIR
     policy: pull
+  tags:
+    - edtech
 
 check types:
   stage: lint
@@ -84,6 +88,8 @@ check types:
       - $PIP_CACHE_DIR
       - $POETRY_CACHE_DIR
     policy: pull
+  tags:
+    - edtech
 
 
 test:
@@ -127,6 +133,8 @@ test:
       coverage_report:
         coverage_format: cobertura
         path: coverage.xml
+  tags:
+    - edtech
 
 
 run migrations consistency test:
@@ -158,3 +166,5 @@ run migrations consistency test:
       - $PIP_CACHE_DIR
       - $POETRY_CACHE_DIR
     policy: pull
+  tags:
+    - edtech
