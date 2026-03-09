@@ -32,7 +32,6 @@ ADUMBLE_CREDENTIALS = HTTPBasicAuth(username="adumble", password="password")
 
 mock.patch("fastapi_cache.decorator.cache", lambda *args, **kwargs: lambda f: f).start()
 
-from app import create_application
 from app.dependencies.main import (
     basic_auth,
     get_abc_service_handler,

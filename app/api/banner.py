@@ -1,5 +1,4 @@
 from fastapi import APIRouter, Depends, Path, HTTPException
-from sqlalchemy import or_
 from sqlmodel import Session, select
 from starlette import status
 from datetime import date

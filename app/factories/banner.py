@@ -1,5 +1,3 @@
-import string
-
 from factory import Faker, LazyFunction
 from factory.alchemy import SQLAlchemyModelFactory
 from app.factories.factory import *

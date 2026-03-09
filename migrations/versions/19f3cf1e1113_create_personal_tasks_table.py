@@ -5,9 +5,6 @@ Revises: cec258c42dae
 Create Date: 2026-03-01 11:34:51.268080
 
 """
-from alembic import op
-import sqlalchemy as sa
-import sqlmodel # added
 
 
 # revision identifiers, used by Alembic.

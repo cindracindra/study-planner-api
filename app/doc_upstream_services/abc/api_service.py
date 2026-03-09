@@ -1,4 +1,3 @@
-from app.doc_upstream_services.abc.deserialisation import deserialize_or_502
 from app.doc_upstream_services.abc.schemas import (
     AppSchemasCustomPeopleDetailsStudentDetails,
 )
