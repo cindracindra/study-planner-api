@@ -113,8 +113,8 @@ test:
     POSTGRES_USER: "test_user"
     POSTGRES_DB: "test_study_planner"
     POSTGRES_HOST_AUTH_METHOD: "trust"
-    POSTGRES_PASSWORD: ""
-    TEST_DB_SERVER_URL: "postgresql://test_user@db-service"
+    POSTGRES_PASSWORD: "password"
+    TEST_DB_SERVER_URL: "postgresql://test_user:password@db-service"
   cache:
     key: "${CI_COMMIT_REF_SLUG}-${CI_COMMIT_SHA}"
     paths:
@@ -122,6 +122,7 @@ test:
       - $POETRY_CACHE_DIR
     policy: pull
   script:
+    - docker logs $(docker ps -q --filter "name=postgres") 2>&1 || echo "Could not get logs"
     - apt-get update && apt-get install -y postgresql-client
     - timeout 60 bash -c "until pg_isready -h db-service -U test_user; do echo 'Waiting for postgres...'; sleep 1; done"
     - echo "TEST_DB_SERVER_URL is $TEST_DB_SERVER_URL"
