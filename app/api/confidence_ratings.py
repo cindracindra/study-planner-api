@@ -51,7 +51,7 @@ def get_personal_confidence_ratings(
 
     ratings_query = select(ModuleRating).where(
         ModuleRating.confidence_rating_id == result.id,
-        ModuleRating.module_code.in_(module_codes),
+        ModuleRating.module_code.in_(module_codes),  # type: ignore[unresolved-attribute]
     )
 
     return ConfidenceRatingRead(

@@ -1,18 +1,17 @@
-from app.doc_upstream_services.abc.schemas import (
-    AppSchemasCustomPeopleDetailsStudentDetails,
-)
 from app.doc_upstream_services.base_service import DocUpstreamService
+from app.doc_upstream_services.response_wrappers import UpstreamResponse
 from app.protocols import AbcUpstreamService
 
 
 class AbcAPIService(DocUpstreamService, AbcUpstreamService):
+
     def student_info(
         self,
         usernames: list[str] | None,
         year: str,
         cohorts: list[str] | None = None,
         proxied_user: str | None = None,
-    ) -> list[AppSchemasCustomPeopleDetailsStudentDetails]:
+    ) -> UpstreamResponse:
         params = {"login": usernames}
         if cohorts:
             params.update(cohort=cohorts)

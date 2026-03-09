@@ -14,7 +14,7 @@ class DummyResponse:
     headers: list | None = None
 
     @property
-    def json_content(self) -> dict | list:
+    def json_content(self) -> dict | list | None :
         return json.loads(self.content) if self.content is not None else None
 
     def json(self):
@@ -29,7 +29,7 @@ class DummyAbcAPIService(AbcUpstreamService):
         year: str,
         cohorts: list[str] | None = None,
         proxied_user: str | None = None,
-    ) -> list[AppSchemasCustomPeopleDetailsStudentDetails]:
+    ) -> list[AppSchemasCustomPeopleDetailsStudentDetails] | DummyResponse:
         # Year 1 modules (all students)
         module_40009 = {
             "code": "40009",

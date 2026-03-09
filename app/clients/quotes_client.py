@@ -4,7 +4,7 @@ import random
 from app.constants.static_quotes import FALLBACK_EXCUSES, FALLBACK_QUOTES
 
 
-def get_random_quote() -> dict:
+def get_random_quote() -> str:
     """Fetch quote from external API, fall back to static list."""
     try:
         response = requests.get("https://zenquotes.io/api/random", timeout=5.0)
