@@ -107,7 +107,7 @@ test:
     POSTGRES_USER: "test_user"
     POSTGRES_DB: "test_study_planner"
     POSTGRES_HOST_AUTH_METHOD: "trust"
-    TEST_DATABASE_URL: "postgresql://test_user@db-service"
+    TEST_DB_SERVER_URL: "postgresql://test_user@db-service"
   cache:
     key: "${CI_COMMIT_REF_SLUG}-${CI_COMMIT_SHA}"
     paths:
