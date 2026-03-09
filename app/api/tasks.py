@@ -24,7 +24,7 @@ def get_personal_tasks(
     query = select(Task).where(
         Task.year == year,
         Task.username == username,
-        or_(Task.creation_date == date.today(), not Task.task_completed),
+        or_(Task.creation_date == date.today(), Task.task_completed.is_(False)),
     )
     return session.exec(query).all()
 
