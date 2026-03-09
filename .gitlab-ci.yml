@@ -1,9 +1,9 @@
 image: python:3.12
+
 stages:
   - prepare
   - lint
   - test
-  - build
 
 variables:
   PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
@@ -16,9 +16,10 @@ cache:
     - $POETRY_CACHE_DIR
 
 before_script:
-  - apt update
+  - apt-get update -qq
   - apt-get install -y python3.13-dev build-essential libldap2-dev libsasl2-dev ldap-utils libpq-dev enscript poppler-utils qpdf
   - pip install poetry
+  - poetry config cache-dir $POETRY_CACHE_DIR
 
 cache dependencies:
   stage: prepare
@@ -34,7 +35,6 @@ cache dependencies:
         - "pyproject.toml"
         - "poetry.lock"
   script:
-    - poetry config cache-dir $POETRY_CACHE_DIR
     - poetry install --no-interaction --no-root
   cache:
     key: "${CI_COMMIT_REF_SLUG}-${CI_COMMIT_SHA}"
@@ -49,7 +49,6 @@ check style:
   rules:
     - if: $CI_PIPELINE_SOURCE != "schedule"
       changes:
-        - ".gitlab-ci.yml"
         - "*.py"
         - "app/**/*"
         - "migrations/**/*"
