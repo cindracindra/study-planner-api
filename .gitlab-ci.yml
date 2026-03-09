@@ -100,7 +100,7 @@ test:
         - "poetry.lock"
         - "tests/**/*"
   services:
-    - name: postgres
+    - name: postgres:16
       alias: db-service
   variables:
     PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
@@ -115,6 +115,8 @@ test:
       - $POETRY_CACHE_DIR
     policy: pull
   script:
+    - echo "TEST_DB_SERVER_URL is $TEST_DB_SERVER_URL"
+    - poetry run python -c "import os; print(os.environ.get('TEST_DB_SERVER_URL', 'NOT SET'))"
     - poetry run pytest --junitxml=report.xml --cov=app/ tests/
     - poetry run coverage xml
   coverage: '/(?i)total.*? (100(?:\.0+)?\%|[1-9]?\d(?:\.\d+)?\%)$/'
@@ -134,7 +136,7 @@ run migrations consistency test:
       changes:
         - "migrations/**/*"
   services:
-    - name: postgres
+    - name: postgres:16
       alias: db-service
   variables:
     PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
