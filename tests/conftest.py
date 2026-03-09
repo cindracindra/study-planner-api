@@ -48,7 +48,7 @@ for factory in orm_factories + abc_factories:
 
 @pytest.fixture(name="db_engine", scope="session")
 def db_engine_fixture():
-    engine = create_engine(f"{TEST_DB_SERVER_URL}/test-module_subscriptions")
+    engine = create_engine(f"{TEST_DB_SERVER_URL}/test-test_study_planner")
     if database_exists(engine.url):
         # Catch case in which previous test run failed without teardown
         drop_database(engine.url)
