@@ -1,8 +1,6 @@
 from typing import Protocol
 
-from app.doc_upstream_services.abc.schemas import (
-    AppSchemasCustomPeopleDetailsStudentDetails,
-)
+from app.doc_upstream_services.response_wrappers import UpstreamResponse
 
 
 class Authenticator(Protocol):
@@ -22,5 +20,5 @@ class AbcUpstreamService(Protocol):
         year: str,
         cohorts: list[str] | None = None,
         proxied_user: str | None = None,
-    ) -> list[AppSchemasCustomPeopleDetailsStudentDetails]:
+    ) -> UpstreamResponse:
         """ABC API can provide a student's personal information"""

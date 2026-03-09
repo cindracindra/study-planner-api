@@ -1,9 +1,6 @@
 import json
 from dataclasses import dataclass
 
-from app.doc_upstream_services.abc.schemas import (
-    AppSchemasCustomPeopleDetailsStudentDetails,
-)
 from app.protocols import AbcUpstreamService
 
 
@@ -19,17 +16,17 @@ class DummyResponse:
 
     def json(self):
         return json.loads(self.content) if self.content is not None else None
-    
 
 
 class DummyAbcAPIService(AbcUpstreamService):
+
     def student_info(
         self,
         usernames: list[str] | None,
         year: str,
         cohorts: list[str] | None = None,
         proxied_user: str | None = None,
-    ) -> list[AppSchemasCustomPeopleDetailsStudentDetails] | DummyResponse:
+    ) -> DummyResponse:  # type: ignore[invalid-argument-type]
         # Year 1 modules (all students)
         module_40009 = {
             "code": "40009",
@@ -442,5 +439,5 @@ class DummyAbcAPIService(AbcUpstreamService):
                     for username in usernames
                     if username in FAKE_STUDENT_INFO
                 ]
-            ).encode()
+            ).encode()  # type: ignore[invalid-argument-type]
         )

@@ -144,6 +144,6 @@ def student_abc_config(
     )
     return {
         "student_info": DummyResponse(
-            content=json.dumps([student.model_dump()]).encode()
+            content=json.dumps([student.model_dump()]).encode()  # type: ignore[invalid-argument-type]
         )
     }
