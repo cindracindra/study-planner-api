@@ -51,7 +51,10 @@ def db_engine_fixture():
         drop_database(engine.url)
     create_database(engine.url)
     alembic_cfg = Config("alembic.ini")
-    alembic_cfg.set_main_option("sqlalchemy.url", str(engine.url))
+    # str(engine.url) masks the password as "***", so render it in full.
+    # "%" is escaped because Alembic's config treats it as interpolation.
+    db_url = engine.url.render_as_string(hide_password=False).replace("%", "%%")
+    alembic_cfg.set_main_option("sqlalchemy.url", db_url)
     command.upgrade(alembic_cfg, "head")
     yield engine
     drop_database(engine.url)
