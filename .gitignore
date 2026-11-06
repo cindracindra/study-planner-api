@@ -1,30 +1,35 @@
-# pyc files
+# Python
+**/__pycache__/
 **/*.pyc
+.cache/
+venv/
+.venv/
 
-.cache
-
-# content of db
+# Local databases
 **/*.db
 
-# idea files
-.idea
-*.iml
+# Test and coverage output
+.coverage
+coverage.xml
+report.xml
+.pytest_cache/
+.ruff_cache/
 
-# virtual environment
-venv/
-
-# out
+# Build output
 out/
 
-# pycache
-**/__pycache__/
-
+# Editors and OS
+.idea/
+*.iml
+.vscode/
 .DS_Store
 .DS_Store?
 
+# Environment files
+.env
+.env.*
 
-zztests
-zzendoints
-
-
+# Local scratch
 /dummy-store/
+zztests/
+zzendoints/
