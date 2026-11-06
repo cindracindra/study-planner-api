@@ -53,6 +53,7 @@ ignore_missing_imports = true
 ignore = ["F821", "F403", "E731"]
 
 [tool.pytest.ini_options]
+addopts = "-m 'not integration'"
 markers = [
     "integration: marks tests as integration tests (real external API calls)",
 ]
