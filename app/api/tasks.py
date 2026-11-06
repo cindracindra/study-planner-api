@@ -51,9 +51,15 @@ def create_personal_task(
 @tasks_router.get("/{task_id}", response_model=TaskRead)
 def get_task(
     task_id: int,
+    year: str = Path(..., description="Academic year in short form e.g. 2324"),
+    username: str = Depends(get_current_user),
     session: Session = Depends(get_session),
 ):
-    query = select(Task).where(Task.id == task_id)
+    query = select(Task).where(
+        Task.id == task_id,
+        Task.year == year,
+        Task.username == username,
+    )
     task = session.exec(query).first()
     if not task:
         raise HTTPException(
@@ -69,9 +75,15 @@ def get_task(
 def update_task_completion(
     task_id: int,
     patch: TaskUpdate,
+    year: str = Path(..., description="Academic year in short form e.g. 2324"),
+    username: str = Depends(get_current_user),
     session: Session = Depends(get_session),
 ):
-    query = select(Task).where(Task.id == task_id)
+    query = select(Task).where(
+        Task.id == task_id,
+        Task.year == year,
+        Task.username == username,
+    )
     task = session.exec(query).first()
     if not task:
         raise HTTPException(

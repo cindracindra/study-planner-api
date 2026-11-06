@@ -168,3 +168,26 @@ def test_delete_task_endpoint(client, task_factory):
 
     get_res = client.get(f"/me/2526/personal-tasks/{task.id}", auth=HPOTTER_CREDENTIALS)
     assert get_res.status_code == HTTP_404_NOT_FOUND
+
+
+def test_get_task_owned_by_another_user_returns_404(client, task_factory):
+    task = task_factory.create(username="hgranger", year="2526")
+    res = client.get(f"me/2526/personal-tasks/{task.id}", auth=HPOTTER_CREDENTIALS)
+    assert res.status_code == HTTP_404_NOT_FOUND
+
+
+def test_update_task_owned_by_another_user_returns_404(client, task_factory):
+    task = task_factory.create(username="hgranger", year="2526", task_completed=False)
+    res = client.patch(
+        f"me/2526/personal-tasks/{task.id}",
+        json={"task_completed": True},
+        auth=HPOTTER_CREDENTIALS,
+    )
+    assert res.status_code == HTTP_404_NOT_FOUND
+    assert task.task_completed is False
+
+
+def test_delete_task_owned_by_another_user_returns_404(client, task_factory):
+    task = task_factory.create(username="hgranger", year="2526")
+    res = client.delete(f"me/2526/personal-tasks/{task.id}", auth=HPOTTER_CREDENTIALS)
+    assert res.status_code == HTTP_404_NOT_FOUND
