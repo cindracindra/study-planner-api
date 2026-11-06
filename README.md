@@ -1,58 +1,124 @@
-# Study Planner API: SSE Project [cc4525]
+# Study Planner API
 
+![Python 3.13](https://img.shields.io/badge/python-3.13-blue)
+![FastAPI](https://img.shields.io/badge/FastAPI-0.128-009688)
 
-## Project Requirements
+A FastAPI service behind a **Study Planner** feature for **Scientia**, the student portal of
+Imperial College London's Department of Computing. Students use it to keep a daily to-do list,
+rate how confident they feel in each module week by week, and see a motivational banner on
+their dashboard.
 
-* [Poetry](https://python-poetry.org/) for dependency management
-* [FastAPI](https://fastapi.tiangolo.com/) - modern, fast web framework for building APIs
-* [SQLModel](https://sqlmodel.tiangolo.com/) - SQL databases with Python type annotations
-* [Pydantic](https://docs.pydantic.dev/) - data validation using Python type annotations
-* [Alembic](https://alembic.sqlalchemy.org/) - database migrations
-* [Typer](https://typer.tiangolo.com/) - CLI interface
-* **Postgres SQL** - databases
+I built it as my individual project for the Software Systems Engineering (SSE) course at
+Imperial (February to March 2026). It includes the service, its database schema and migrations,
+the tests, and the integration into the existing Scientia front end and its backend-for-frontend.
 
+## Features
 
-## Running the app
+| Area | What it does | Endpoints |
+|---|---|---|
+| **Personal tasks** | A daily to-do list. Completed tasks drop off the next day; unfinished ones carry over. | `GET / POST /me/{year}/personal-tasks`<br>`GET / PATCH / DELETE /me/{year}/personal-tasks/{id}` |
+| **Confidence ratings** | Students rate each enrolled module from 1 to 5 for every term week, shown as a heat map. On first access each day, the service syncs the module list from the department's ABC (student records) API and adds any missing rating slots. | `GET /me/{year}/personal-confidence-ratings`<br>`PATCH /me/{year}/personal-confidence-ratings/modules/{id}` |
+| **Daily banner** | Shows a quote from [ZenQuotes](https://zenquotes.io) each day (with a built-in fallback list), a random "excuse", or a message the student writes. | `GET / PATCH /me/{year}/banner` |
 
-You can run the app via Poetry or via Docker. At the moment, the instructions for running the app via Poetry are specific for MacOS users (due to the `brew` references); Windows and other Unix users may find it more convenient to run the app via Docker.
+Every route is scoped to the authenticated user (`/me/...`) and an academic year (`2526` = 2025–26).
+Interactive OpenAPI docs are served at `/`.
 
-### Via Poetry (recommended for MacOS users)
+## Architecture
 
-> This option relies on a running local PostgreSQL instance. Make sure you have a `study-planner` database and a `user` user with password `pass` and full usage, creation and deletion privileges on it.
+```mermaid
+flowchart LR
+    FE["Scientia front end<br/>(React + TypeScript)"] --> BFF["scientia-api<br/>(FastAPI BFF)"]
+    BFF --> SP["study-planner-api<br/>(this repo)"]
+    SP --> DB[(PostgreSQL)]
+    SP -. module enrolments .-> ABC["ABC API<br/>(student records)"]
+    SP -. daily quote .-> ZQ["zenquotes.io"]
+```
 
-```shell
-brew services start postgresql
+- **FastAPI + SQLModel** for the routes and ORM models, with **Pydantic** schemas for request and response validation.
+- **Alembic** for schema migrations; CI checks that they upgrade, downgrade and upgrade again cleanly.
+- **Dependency injection** for the database session, authentication and the upstream ABC client,
+  so tests can swap each one out. In development, both the department's LDAP login and the ABC API are
+  replaced by in-memory fakes (`app/dev_service_providers/`).
+- **Lazy daily sync**: confidence-rating slots are created when the student first loads them each day
+  (tracked in `user_sync_status`), rather than by a scheduled job.
+
+### My contributions outside this repo
+
+The feature spans three codebases. This repo is the part I own outright. The other two belong to the
+department's EdTech team and are not public, so they are only described here:
+
+- **Scientia front end** (React, TypeScript, Radix UI): a new Study Planner page with
+  upcoming-deadline, daily-focus, task-list, confidence-map and banner panes; six data hooks;
+  and typed schemas for the new resources (about 1,200 lines).
+- **scientia-api** (the backend-for-frontend): authenticated proxy endpoints and a typed service client
+  that forward Study Planner requests to this API (about 280 lines).
+
+## Tech stack
+
+Python 3.13 · FastAPI · SQLModel / SQLAlchemy · Pydantic v2 · Alembic · PostgreSQL ·
+Typer (CLI) · pytest + factory_boy · Ruff · ty · Docker · GitHub Actions
+
+## Running locally
+
+### With Docker (simplest)
+
+```bash
+docker compose -f dev.docker-compose.yml up --build
+docker compose -f dev.docker-compose.yml exec api alembic upgrade head
+docker compose -f dev.docker-compose.yml exec api python cli.py populate_db 2526
+```
+
+The API is then available at <http://localhost:8000>.
+
+### With Poetry
+
+Requires Python 3.13+ and a local PostgreSQL server with a `study_planner` database.
+By default the app connects to `postgresql://user:pass@localhost/study_planner`; set
+`DATABASE_URL` to use something else.
+
+```bash
 poetry install
 poetry run alembic upgrade head
 poetry run python cli.py populate_db 2526
 poetry run fastapi dev --host 0.0.0.0 --port 8000
 ```
 
-For executing the test suite:
+### Logging in
 
-```shell
-poetry run pytest
+Development mode uses a fake LDAP service, so any username from
+`app/dev_service_providers/ldap_authentication.py` (e.g. `hpotter`) works with any password,
+via HTTP Basic auth.
+
+## Tests
+
+The suite creates and drops a throwaway `test_study_planner` database on the server given by
+`TEST_DB_SERVER_URL` (for example `postgresql://` for a local socket connection).
+
+```bash
+TEST_DB_SERVER_URL=postgresql:// poetry run pytest --cov=app
 ```
 
-### Note on dummy users
+Tests that call the real ZenQuotes API are marked `integration` and skipped by default:
 
-The _development_ (default) configuration runs with a fake instance of the
-LDAP service (to make things easier
-locally). The users recognised by this fake service are defined in
-`dev_service_providers/ldap_authentication.py`. You are provided
-with several fake users. To log into the application,
-you can actually enter anyone of the available usernames and any
-character you wish as password (the actual value is ignored by the fake LDAP).
+```bash
+poetry run pytest -m integration
+```
 
-## CLI interface
+## CLI
 
-The application uses Typer for its CLI interface. Custom commands can be found in `cli.py` at the project root.
+| Command | Purpose |
+|---|---|
+| `python cli.py populate_db <year>` | Seed the database with sample students, ratings and tasks |
+| `python cli.py erase_data [--force]` | Delete all rows, keeping the tables |
+| `alembic upgrade head` / `alembic downgrade -1` | Apply or roll back migrations |
 
-Available commands:
-* `python cli.py populate_db <year>` - Populate database with dummy data
-* `python cli.py erase_data` - Erase all data from tables
+## Acknowledgements
 
-Database migrations are handled by Alembic:
-* `alembic upgrade head` - Apply all migrations
-* `alembic downgrade -1` - Rollback one migration
-* `alembic revision --autogenerate -m "description"` - Create a new migration
+This service was built to run inside the Department of Computing's EdTech ecosystem and follows
+the conventions of the department's existing services. A few support modules are adapted from
+EdTech code; see [NOTICE](NOTICE) for the list. Everything else is my own work.
+
+## License
+
+My original code is released under the [MIT License](LICENSE). The adapted files listed in
+[NOTICE](NOTICE) are not covered by that licence.

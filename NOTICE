@@ -1,0 +1,25 @@
+Study Planner API
+Copyright (c) 2026 Cindra
+
+This project was developed as coursework at the Department of Computing,
+Imperial College London, to integrate with the department's Scientia platform.
+
+The following files are adapted from, or generated against, code and APIs
+maintained by the Department of Computing EdTech team. They are included so
+the service runs in the same ecosystem, and are NOT covered by this
+repository's MIT License:
+
+  app/dev_service_providers/ldap_authentication.py
+      Fake LDAP authenticator for local development (adapted from scientia-api).
+
+  app/doc_upstream_services/base_service.py
+  app/doc_upstream_services/response_wrappers.py
+      HTTP client base class and response wrapper for upstream DoC services
+      (adapted from scientia-api).
+
+  app/doc_upstream_services/abc/schemas.py
+      Pydantic models generated with datamodel-code-generator from the DoC
+      ABC API's OpenAPI specification (scripts/autogenerate-abc-schemas.sh).
+
+Other project scaffolding (dependency-injection layout, test fixtures,
+migrations setup) follows the conventions of DoC EdTech services.
