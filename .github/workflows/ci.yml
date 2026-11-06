@@ -16,13 +16,14 @@ jobs:
   lint:
     name: Lint and type check
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Install system libraries
         run: sudo apt-get update -qq && sudo apt-get install -y -qq libldap2-dev libsasl2-dev libpq-dev
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: ${{ env.PYTHON_VERSION }}
 
@@ -44,6 +45,7 @@ jobs:
   test:
     name: Tests
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     services:
       postgres:
         image: postgres:17
@@ -61,12 +63,12 @@ jobs:
       TEST_DB_SERVER_URL: postgresql://postgres:postgres@localhost:5432
       DATABASE_URL: postgresql://postgres:postgres@localhost:5432/postgres
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Install system libraries
         run: sudo apt-get update -qq && sudo apt-get install -y -qq libldap2-dev libsasl2-dev libpq-dev
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: ${{ env.PYTHON_VERSION }}
 
