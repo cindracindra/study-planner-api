@@ -11,4 +11,4 @@ class Banner(SQLModel, table=True):
     year: str = Field(index=True)
     date: date
     banner_type: str
-    display_text: str 
+    display_text: str

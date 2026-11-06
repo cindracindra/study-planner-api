@@ -5,6 +5,7 @@ from datetime import date
 
 from app.models.banner import Banner
 
+
 class BannerFactory(SQLAlchemyModelFactory):
     class Meta:
         model = Banner

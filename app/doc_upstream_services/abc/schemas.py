@@ -65,7 +65,6 @@ class AppSchemasCustomPeopleDetailsStudentDetails(BaseModel):
     personal_tutor: Person | None
 
 
-
 # class Name(StrEnum):
 #     autumn_term = "autumn term"
 #     winter_break = "winter break"

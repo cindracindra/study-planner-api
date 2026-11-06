@@ -27,5 +27,5 @@ class ConfidenceRating(SQLModel, table=True):
     # One-to-many relationship
     module_ratings: list["ModuleRating"] = Relationship(
         back_populates="confidence_rating",
-        sa_relationship_kwargs={"lazy": "selectin", "passive_deletes": True}
+        sa_relationship_kwargs={"lazy": "selectin", "passive_deletes": True},
     )

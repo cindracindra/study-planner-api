@@ -12,20 +12,17 @@ S = TypeVar("S", bound=BaseModel)
 @overload
 def deserialize_or_502(
     response: UpstreamResponse, schema_class: type[S], many: Literal[True]
-) -> list[S]:
-    ...
+) -> list[S]: ...
 
 
 @overload
 def deserialize_or_502(
     response: UpstreamResponse, schema_class: type[S], many: Literal[False]
-) -> S:
-    ...
+) -> S: ...
 
 
 @overload
-def deserialize_or_502(response: UpstreamResponse, schema_class: type[S]) -> S:
-    ...
+def deserialize_or_502(response: UpstreamResponse, schema_class: type[S]) -> S: ...
 
 
 def deserialize_or_502(

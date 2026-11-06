@@ -6,10 +6,9 @@ Create Date: 2026-03-01 11:34:51.268080
 
 """
 
-
 # revision identifiers, used by Alembic.
-revision = '19f3cf1e1113'
-down_revision = 'cec258c42dae'
+revision = "19f3cf1e1113"
+down_revision = "cec258c42dae"
 branch_labels = None
 depends_on = None
 

@@ -19,7 +19,7 @@ def test_get_random_quote_uses_external_api():
 def test_get_random_quote_falls_back_when_api_fails():
     with patch("requests.get", side_effect=Exception("API down")):
         result = get_random_quote()
-        assert result in FALLBACK_QUOTES 
+        assert result in FALLBACK_QUOTES
 
 
 def test_get_random_excuse_returns_from_fallback_list():

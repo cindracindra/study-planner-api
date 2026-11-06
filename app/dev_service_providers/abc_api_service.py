@@ -11,7 +11,7 @@ class DummyResponse:
     headers: list | None = None
 
     @property
-    def json_content(self) -> dict | list | None :
+    def json_content(self) -> dict | list | None:
         return json.loads(self.content) if self.content is not None else None
 
     def json(self):

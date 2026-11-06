@@ -5,7 +5,7 @@ from typer import Typer, confirm, echo, Argument, Option, Exit
 
 from app.database.connection import engine
 from app.factories import orm_factories
-from app.factories import (ConfidenceRatingFactory, ModuleRatingFactory, TaskFactory)
+from app.factories import ConfidenceRatingFactory, ModuleRatingFactory, TaskFactory
 
 from app.utils.factories import set_factories_session
 
@@ -60,7 +60,7 @@ def populate_db(
 
         for student in students:
             cr = ConfidenceRatingFactory(username=student, year=year)
-    
+
             for code in module_codes:
                 for week in range(1, 12):
                     ModuleRatingFactory(

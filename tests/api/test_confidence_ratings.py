@@ -1,4 +1,9 @@
-from starlette.status import HTTP_200_OK, HTTP_401_UNAUTHORIZED, HTTP_404_NOT_FOUND, HTTP_406_NOT_ACCEPTABLE
+from starlette.status import (
+    HTTP_200_OK,
+    HTTP_401_UNAUTHORIZED,
+    HTTP_404_NOT_FOUND,
+    HTTP_406_NOT_ACCEPTABLE,
+)
 from tests.conftest import HPOTTER_CREDENTIALS
 
 
@@ -49,7 +54,8 @@ def test_confidence_ratings_response_only_contains_ratings_for_user_and_year(
 
 
 def test_module_rating_contains_expected_fields(
-    client, student_abc_config,
+    client,
+    student_abc_config,
     abc_patched_client,
     confidence_rating_factory,
     module_rating_factory,

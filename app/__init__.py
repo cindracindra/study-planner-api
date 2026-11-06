@@ -17,7 +17,7 @@ tags_metadata = [
     {
         "name": "banner",
         "description": "Fetch and update of quotes, excuse and custom quotes for banner",
-    }
+    },
 ]
 
 
@@ -36,10 +36,10 @@ def create_application() -> FastAPI:
         openapi_tags=tags_metadata,
         docs_url="/",
     )
-    
+
     routers = [tasks_router, confidence_ratings_router, banner_router]
-    
+
     for router in routers:
         rest_api.include_router(router)
-        
+
     return rest_api

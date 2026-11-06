@@ -61,7 +61,7 @@ def create_missing_ratings(
         ModuleRating.confidence_rating_id == confidence_rating.id
     )
     existing_keys = {
-        (mr.module_code, mr.term_week) 
+        (mr.module_code, mr.term_week)
         for mr in session.exec(existing_ratings_query).all()
     }
 

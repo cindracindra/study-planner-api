@@ -53,6 +53,6 @@ class AppSchemasCustomPeopleDetailsStudentDetailsFactory(factory.Factory):
     degree_year = factory.Faker(
         "random_element", elements=["mc1", "mc2", "mc3", "bc1", "bc2"]
     )
-    modules = factory.LazyFunction(list) 
+    modules = factory.LazyFunction(list)
     modules_helped = factory.LazyFunction(list)
     personal_tutor = factory.SubFactory(PersonFactory)
